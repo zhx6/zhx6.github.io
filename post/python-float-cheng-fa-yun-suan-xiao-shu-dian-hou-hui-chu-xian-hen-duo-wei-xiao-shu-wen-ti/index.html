@@ -4,7 +4,7 @@
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<title>关于 | 皮皮虎&#39;s Blog</title>
+<title>Python float乘法运算小数点后会出现很多位小数问题 | 皮皮虎&#39;s Blog</title>
 
 <link rel="shortcut icon" href="https://zhx6.github.io/favicon.ico?v=1640711086387">
 
@@ -117,31 +117,46 @@
         <div class="post-detail gt-bg-theme-color-second">
             <article class="gt-post-content">
                 <h2 class="post-title">
-                    关于
+                    Python float乘法运算小数点后会出现很多位小数问题
                 </h2>
                 <div class="post-info">
                     <time class="post-time gt-c-content-color-first">
-                        · 2019-01-25 ·
+                        · 2021-12-29 ·
                     </time>
+                    
+                        <a href="https://zhx6.github.io/tag/rHwd_MYxk/" class="post-tags">
+                            # Python
+                        </a>
                     
                 </div>
                 <div class="post-content">
-                    <h2 id="我">我</h2>
-<p>来自华夏中部大明城的一位靓仔，传说这里有个夏雨荷，自由职业者。性别男，爱好女，身高180(CM)，体重保密，脾气阴晴多变。玩这个网络有十年了，学的东西都是皮毛，天天做梦成为亿万富翁，业余设计师会做些小logo，心情好可以无偿做，心情不好有偿做。一直渴望有几个真心朋友，但并没有。</p>
-<!-- more -->
-<h2 id="爱好">爱好</h2>
-<ul>
-<li><code>游戏</code>：LOL/CF/DNF/QQ飞车/守望屁股/堡垒之夜/绝地求生都会玩，想要一起玩的小伙伴可以联系我。</li>
-<li><code>音乐</code>：流行乐/说唱/DJ/摇滚/民谣都喜欢听，最喜欢的歌手“幼稚园杀手”，不要问为什么，懂得人自然懂。</li>
-<li><code>电影</code>：一般不去电影院，除非有人叫我。但喜欢在各种媒体上找最新的电影看。</li>
-<li><code>读书</code>：平时读得最多的是小说，比较喜欢网络小说，最喜欢耳根大大的小说。</li>
-<li><code>饮食</code>：肉食主义者，没有肉活不了的那种，喜欢喝果茶/果汁各种甜的饮料。</li>
-</ul>
+                    <h2 id="前言">前言</h2>
+<p>说实话 这问题挺艹蛋的，我调试了半天，发现是Python所有浮点数规范遵从IEEEE754二进制浮点数算术标准（ANSI/IEEE Std 754-1985），说一下我想实现什么吧，就是出价的数字<br>
+<code>出价 78.6 换算成程序出价是要乘个100000 真实结果：7860000</code></p>
+<h2 id="错误代码">错误代码</h2>
+<p><code>(78 + round(random.uniform(1, 0), 2)) * 100000</code></p>
+<h3 id="运行结果">运行结果</h3>
+<p><code>7880000.0 7816000.0 7859000.0 7834999.999999999 7820999.999999999 7859999.999999999</code><br>
+这肯定不对的啊.....<br>
+后来查到一篇文章讲了这个 https://xufive.blog.csdn.net/article/details/103816159<br>
+真是太恶心了</p>
+<h2 id="解决方法">解决方法</h2>
+<p><code>from decimal import * Decimal((78 + round(random.uniform(1, 0), 2)) * 100000).quantize(Decimal('0'))</code><br>
+用了Decimal模块完美解决此问题</p>
+<h3 id="结果">结果</h3>
+<p><code>7844000 7898000 7900000 7825000 7872000 7843000 7810000 7866000 7807000 7836000 7826000 7803000 7832000 7868000 7851000 7868000</code></p>
 
                 </div>
             </article>
         </div>
 
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://zhx6.github.io/post/guo-nei-kai-yuan-jing-xiang-zhan-dian-hui-zong/" class="post-title gt-a-link">
+                    国内开源镜像站点汇总
+                </a>
+            </div>
         
 
         
