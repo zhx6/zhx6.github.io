@@ -1,10 +1,10 @@
-<html lang="zh">
+<html>
 <head>
     <meta charset="utf-8" />
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<title>关于 - 皮皮虎&#39;s Blog</title>
+<title>Python在Linux后台运行 | 皮皮虎&#39;s Blog</title>
 
 <link rel="shortcut icon" href="https://zhx6.github.io/favicon.ico?v=1640749447109">
 
@@ -25,7 +25,7 @@
 
 
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
 </head>
 <body>
 <div class="main gt-bg-theme-color-first">
@@ -114,25 +114,85 @@
 </script>
 
     <div class="post-container">
-        <div class="post-detail">
+        <div class="post-detail gt-bg-theme-color-second">
             <article class="gt-post-content">
+                <h2 class="post-title">
+                    Python在Linux后台运行
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-12-29 ·
+                    </time>
+                    
+                        <a href="https://zhx6.github.io/rHwd_MYxk/" class="post-tags">
+                            # Python
+                        </a>
+                    
+                </div>
                 <div class="post-content">
-                    <h2 id="我">我</h2>
-<p>来自华夏中部大明城的一位靓仔，传说这里有个夏雨荷，自由职业者。性别男，爱好女，身高180(CM)，体重保密，脾气阴晴多变。玩这个网络有十年了，学的东西都是皮毛，天天做梦成为亿万富翁，业余设计师会做些小logo，心情好可以无偿做，心情不好有偿做。一直渴望有几个真心朋友，但并没有。</p>
-<!-- more -->
-<h2 id="爱好">爱好</h2>
+                    <h2 id="前言">前言</h2>
+<p>写了一个python任务脚本，需要一直运行，刚开始使用了宝塔应用管理器和python管理器，都会出现运行着就停止运行的情况，而且上面还是显示在运行着....于是打算直接使用nohup运行</p>
+<h2 id="方法">方法</h2>
 <ul>
-<li><code>游戏</code>：LOL/CF/DNF/QQ飞车/守望屁股/堡垒之夜/绝地求生都会玩，想要一起玩的小伙伴可以联系我。</li>
-<li><code>音乐</code>：流行乐/说唱/DJ/摇滚/民谣都喜欢听，最喜欢的歌手“幼稚园杀手”，不要问为什么，懂得人自然懂。</li>
-<li><code>电影</code>：一般不去电影院，除非有人叫我。但喜欢在各种媒体上找最新的电影看。</li>
-<li><code>读书</code>：平时读得最多的是小说，比较喜欢网络小说，最喜欢耳根大大的小说。</li>
-<li><code>饮食</code>：肉食主义者，没有肉活不了的那种，喜欢喝果茶/果汁各种甜的饮料。</li>
+<li>先进入脚本文件的根目录</li>
 </ul>
+<pre><code>cd /www/Python/Auto/qianchuan/jiankong
+</code></pre>
+<ul>
+<li>使用nohup运行</li>
+</ul>
+<pre><code>nohup python -u main.py &gt; message.log 2&gt;&amp;1 &amp;
+</code></pre>
+<h2 id="解释">解释</h2>
+<h3 id="nohup-和-的区别">nohup 和 &amp; 的区别</h3>
+<ol>
+<li>&amp;<br>
+是指在后台运行，但当用户退出(挂起)的时候，命令自动也跟着退出</li>
+<li>nohup</li>
+</ol>
+<p>运行 nohup --help<br>
+Run COMMAND, ignoring hangup signals. 可以看到是“运行命令，忽略挂起信号”就是不挂断的运行，注意没有后台运行功能。</p>
+<p>那么，我们可以巧妙的吧他们结合起来用就是<br>
+nohup COMMAND &amp;<br>
+这样就能使命令永久的在后台执行</p>
+<h3 id="-u">-u</h3>
+<p>python的输出进行了缓冲，导致message.log并不能够马上看到输出。<br>
+为python添加-u 参数，使得python不启用缓冲。</p>
+<h3 id="messagelog">message.log</h3>
+<p>如果不填写的话，系统默认是写入到运行文件同位置output.out文件内，填写的话则会重定向到指定的文件</p>
+<h3 id="21">2&gt;&amp;1</h3>
+<ul>
+<li>0 表示stdin标准输入，用户键盘输入的内容</li>
+<li>1 表示stdout标准输出，输出到显示屏的内容</li>
+<li>2 表示stderr标准错误，报错内容</li>
+</ul>
+<blockquote>
+<p>2&gt;&amp;1是一个整体，&gt;左右不能有空格，即将错误内容重定向输入到标准输出中去。<br>
+2&gt;&amp;1中的&amp;是为了区别文件1和1(标准输出)，假如为2&gt;1，就成了将错误内容输出到文件1中，而不是标准输出中。</p>
+</blockquote>
+<h2 id="其他">其他</h2>
+<p>挂起后台进程以后想查看是否运行或者关闭该怎么办呢？别急，我们继续。</p>
+<h2 id="查看进程">查看进程</h2>
+<pre><code>ps aux | grep main.py
+</code></pre>
+<p><img src="https://zhx6.github.io/post-images/1640709726260.png" alt="查看进程PID" loading="lazy"><br>
+main.py 是运行的文件<br>
+可以看到PID是12526</p>
+<h2 id="关闭进程">关闭进程</h2>
+<pre><code>kill -9 12526
+</code></pre>
+<h2 id="实时追踪文件输出到屏幕">实时追踪文件输出到屏幕</h2>
+<pre><code>tailf message.log
+</code></pre>
 
                 </div>
             </article>
         </div>
-        <br>
+
+        
+
+        
+
         
             
                 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css">
@@ -179,11 +239,11 @@
 </script>
 
             
+
             
         
 
         
-
 
         <div class="site-footer gt-c-content-color-first">
     <div class="slogan gt-c-content-color-first">出言有尺，嬉闹有度，做事有余，说话有德。</div>
