@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://zhx6.github.io</id>
     <title>皮皮虎&apos;s Blog</title>
-    <updated>2021-12-29T10:43:42.984Z</updated>
+    <updated>2021-12-29T10:47:31.501Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://zhx6.github.io"/>
     <link rel="self" href="https://zhx6.github.io/atom.xml"/>
@@ -255,8 +255,8 @@ function getBingImg()
     </entry>
     <entry>
         <title type="html"><![CDATA[Python float乘法运算小数点后会出现很多位小数问题]]></title>
-        <id>https://zhx6.github.io/python-float-cheng-fa-yun-suan-xiao-shu-dian-hou-hui-chu-xian-hen-duo-wei-xiao-shu-wen-ti/</id>
-        <link href="https://zhx6.github.io/python-float-cheng-fa-yun-suan-xiao-shu-dian-hou-hui-chu-xian-hen-duo-wei-xiao-shu-wen-ti/">
+        <id>https://zhx6.github.io/A88jsrz2/</id>
+        <link href="https://zhx6.github.io/A88jsrz2/">
         </link>
         <updated>2021-12-28T17:00:24.000Z</updated>
         <content type="html"><![CDATA[<h2 id="前言">前言</h2>
@@ -306,8 +306,8 @@ Decimal((78 + round(random.uniform(1, 0), 2)) * 100000).quantize(Decimal('0'))
     </entry>
     <entry>
         <title type="html"><![CDATA[国内开源镜像站点汇总]]></title>
-        <id>https://zhx6.github.io/guo-nei-kai-yuan-jing-xiang-zhan-dian-hui-zong/</id>
-        <link href="https://zhx6.github.io/guo-nei-kai-yuan-jing-xiang-zhan-dian-hui-zong/">
+        <id>https://zhx6.github.io/HS8j95/</id>
+        <link href="https://zhx6.github.io/HS8j95/">
         </link>
         <updated>2021-12-28T16:47:09.000Z</updated>
         <content type="html"><![CDATA[<h2 id="站点版">站点版</h2>

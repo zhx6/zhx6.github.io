@@ -4,7 +4,7 @@
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<title>PHP 获取每日BING图 并且缓存URL链接到本地JSON | 皮皮虎&#39;s Blog</title>
+<title>Python float乘法运算小数点后会出现很多位小数问题 | 皮皮虎&#39;s Blog</title>
 
 <link rel="shortcut icon" href="https://zhx6.github.io/favicon.ico?v=1640774844393">
 
@@ -117,64 +117,61 @@
         <div class="post-detail gt-bg-theme-color-second">
             <article class="gt-post-content">
                 <h2 class="post-title">
-                    PHP 获取每日BING图 并且缓存URL链接到本地JSON
+                    Python float乘法运算小数点后会出现很多位小数问题
                 </h2>
                 <div class="post-info">
                     <time class="post-time gt-c-content-color-first">
                         · 2021-12-29 ·
                     </time>
                     
-                        <a href="https://zhx6.github.io/kzHd-P3s0/" class="post-tags">
-                            # php
+                        <a href="https://zhx6.github.io/rHwd_MYxk/" class="post-tags">
+                            # Python
                         </a>
                     
                 </div>
                 <div class="post-content">
-                    <p>将获取的BING图链接进行缓存，减少服务器负担，提升访问速度。</p>
-<pre><code class="language-php">&lt;?php
-$filename = &quot;./cache.json&quot;;
-if (file_exists($filename) === false) {
-    file_put_contents($filename, &quot;&quot;);
-}
-$handle = fopen($filename, &quot;r&quot;);
-$contents = fread($handle, filesize($filename));
-fclose($handle);
-$contents = json_decode($contents, true);
-if (filesize($filename) === 0) {
-    getBingImg();
-} else {
-    if ($contents['time'] === date(&quot;Ymd&quot;)) {
-        Header(&quot;Location: &quot; . $contents['url']);
-    } else {
-        getBingImg();
-    }
-}
-function getBingImg()
-{
-    $str = json_decode(file_get_contents('https://cn.bing.com/HPImageArchive.aspx?format=js&amp;idx=0&amp;n=1'));
-    if (isset($str-&gt;images[0])) {
-        $impurely = 'https://cn.bing.com' . $str-&gt;images[0]-&gt;url;
-    } else {
-        $impurely = false;
-    }
-    if ($impurely) {
-        global $contents;
-        if ($contents['url'] !== $impurely) {
-            global $filename;
-            $data = array(
-                &quot;time&quot; =&gt; date(&quot;Ymd&quot;),
-                &quot;url&quot; =&gt; $impurely
-            );
-            $data = json_encode($data);
-            file_put_contents($filename, $data);
-        }
-        Header(&quot;Location: &quot; . $impurely);
-        exit();
-    } else {
-        exit('error');
-    }
-}
-?&gt;
+                    <h2 id="前言">前言</h2>
+<p>说实话 这问题挺艹蛋的，我调试了半天，发现是Python所有浮点数规范遵从IEEEE754二进制浮点数算术标准（ANSI/IEEE Std 754-1985），说一下我想实现什么吧，就是出价的数字</p>
+<pre><code>出价 78.6
+换算成程序出价是要乘个100000
+真实结果：7860000
+</code></pre>
+<h2 id="错误代码">错误代码</h2>
+<pre><code>(78 + round(random.uniform(1, 0), 2)) * 100000
+</code></pre>
+<h3 id="运行结果">运行结果</h3>
+<pre><code>7880000.0
+7816000.0
+7859000.0
+7834999.999999999
+7820999.999999999
+7859999.999999999
+</code></pre>
+<p>这肯定不对的啊.....<br>
+后来查到一篇文章讲了这个 <a href="https://xufive.blog.csdn.net/article/details/103816159">https://xufive.blog.csdn.net/article/details/103816159</a><br>
+真是太恶心了</p>
+<h2 id="解决方法">解决方法</h2>
+<pre><code>from decimal import *
+Decimal((78 + round(random.uniform(1, 0), 2)) * 100000).quantize(Decimal('0'))
+</code></pre>
+<p>用了Decimal模块完美解决此问题</p>
+<h3 id="结果">结果</h3>
+<pre><code>7844000
+7898000
+7900000
+7825000
+7872000
+7843000
+7810000
+7866000
+7807000
+7836000
+7826000
+7803000
+7832000
+7868000
+7851000
+7868000
 </code></pre>
 
                 </div>
@@ -184,8 +181,8 @@ function getBingImg()
         
             <div class="next-post">
                 <div class="next gt-c-content-color-first">下一篇</div>
-                <a href="https://zhx6.github.io/lU92bYTeX/" class="post-title gt-a-link">
-                    添加网页动态滚动进度条|滚动指示器
+                <a href="https://zhx6.github.io/HS8j95/" class="post-title gt-a-link">
+                    国内开源镜像站点汇总
                 </a>
             </div>
         
