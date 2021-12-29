@@ -4,7 +4,7 @@
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<title>PHP 获取每日BING图 并且缓存URL链接到本地JSON | 皮皮虎&#39;s Blog</title>
+<title>Telnet为什么不安全 | 皮皮虎&#39;s Blog</title>
 
 <link rel="shortcut icon" href="https://zhx6.github.io/favicon.ico?v=1640774590713">
 
@@ -117,65 +117,45 @@
         <div class="post-detail gt-bg-theme-color-second">
             <article class="gt-post-content">
                 <h2 class="post-title">
-                    PHP 获取每日BING图 并且缓存URL链接到本地JSON
+                    Telnet为什么不安全
                 </h2>
                 <div class="post-info">
                     <time class="post-time gt-c-content-color-first">
                         · 2021-12-29 ·
                     </time>
                     
-                        <a href="https://zhx6.github.io/kzHd-P3s0/" class="post-tags">
-                            # php
+                        <a href="https://zhx6.github.io/6I99g2XiC/" class="post-tags">
+                            # 知识
+                        </a>
+                    
+                        <a href="https://zhx6.github.io/BatSXgP4IK/" class="post-tags">
+                            # 学习
+                        </a>
+                    
+                        <a href="https://zhx6.github.io/lfAOhY2hns/" class="post-tags">
+                            # 计算机网络
                         </a>
                     
                 </div>
                 <div class="post-content">
-                    <p>将获取的BING图链接进行缓存，减少服务器负担，提升访问速度。</p>
-<pre><code class="language-php">&lt;?php
-$filename = &quot;./cache.json&quot;;
-if (file_exists($filename) === false) {
-    file_put_contents($filename, &quot;&quot;);
-}
-$handle = fopen($filename, &quot;r&quot;);
-$contents = fread($handle, filesize($filename));
-fclose($handle);
-$contents = json_decode($contents, true);
-if (filesize($filename) === 0) {
-    getBingImg();
-} else {
-    if ($contents['time'] === date(&quot;Ymd&quot;)) {
-        Header(&quot;Location: &quot; . $contents['url']);
-    } else {
-        getBingImg();
-    }
-}
-function getBingImg()
-{
-    $str = json_decode(file_get_contents('https://cn.bing.com/HPImageArchive.aspx?format=js&amp;idx=0&amp;n=1'));
-    if (isset($str-&gt;images[0])) {
-        $impurely = 'https://cn.bing.com' . $str-&gt;images[0]-&gt;url;
-    } else {
-        $impurely = false;
-    }
-    if ($impurely) {
-        global $contents;
-        if ($contents['url'] !== $impurely) {
-            global $filename;
-            $data = array(
-                &quot;time&quot; =&gt; date(&quot;Ymd&quot;),
-                &quot;url&quot; =&gt; $impurely
-            );
-            $data = json_encode($data);
-            file_put_contents($filename, $data);
-        }
-        Header(&quot;Location: &quot; . $impurely);
-        exit();
-    } else {
-        exit('error');
-    }
-}
-?&gt;
-</code></pre>
+                    <h2 id="简介">简介</h2>
+<p>Telnet（Teletype Network）属于<strong>应用层</strong>，默认端口为<strong>23</strong>，是一个<strong>明文传送协议</strong>（包括用户名、密码、内容都在互联网上传送），同时分为客户端与服务端进行交互。</p>
+<h2 id="流程">流程</h2>
+<p>Wireshark抓包图如下<br>
+<img src="https://zhx6.github.io/post-images/1640773447742.jpg" alt="" loading="lazy"><br>
+通过分析数据包，Telnet整个流程分为四个阶段为了更好理解如下图所示<br>
+<img src="https://zhx6.github.io/post-images/1640773466870.jpg" alt="" loading="lazy"></p>
+<h3 id="第一阶段tcp三次握手">第一阶段：TCP三次握手</h3>
+<p>很显然，Telnet协议是TCP/IP协议族的一员。由客户端主动向目标服务端建立连接。（三次握手这里暂时不展开讲）</p>
+<h3 id="第二阶段双方通过nvt协商">第二阶段：双方通过NVT协商</h3>
+<p>Telnet协议支持应用不同的操作系统中，并可以很好的在不同操作系统中传输命令；通俗来讲NVT起到了翻译的作用，支持异构性。协商的内容包括窗口大小、工作模式等等。</p>
+<h3 id="第三阶段双通过nvt传输命令">第三阶段：双通过NVT传输命令</h3>
+<p>双方协商完成后，服务端回显给客户端登录命令行，进行验证，验证通过后进行后续的命令操作。</p>
+<h3 id="第四阶段撤销tcp连接">第四阶段：撤销TCP连接</h3>
+<p>客户端对服务端进行撤销连接，此时是一个TCP链接；双方进行FIN，ACK。</p>
+<h2 id="数据">数据：</h2>
+<p>由于Telnet是明文传输，很容易被抓到进行分析从而入侵主机；一旦被攻击者抓到包，这个就相当于在裸跑，毫无秘密可言。<br>
+<img src="https://zhx6.github.io/post-images/1640773612813.jpg" alt="" loading="lazy"></p>
 
                 </div>
             </article>
@@ -184,8 +164,8 @@ function getBingImg()
         
             <div class="next-post">
                 <div class="next gt-c-content-color-first">下一篇</div>
-                <a href="https://zhx6.github.io/lU92bYTeX/" class="post-title gt-a-link">
-                    添加网页动态滚动进度条|滚动指示器
+                <a href="https://zhx6.github.io/d8K-PzlGJ/" class="post-title gt-a-link">
+                    PHP 获取每日BING图 并且缓存URL链接到本地JSON
                 </a>
             </div>
         

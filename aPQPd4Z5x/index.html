@@ -4,7 +4,7 @@
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<title>PHP 获取每日BING图 并且缓存URL链接到本地JSON | 皮皮虎&#39;s Blog</title>
+<title>用 Alpine.js 构建一个 ajax 表单 | 皮皮虎&#39;s Blog</title>
 
 <link rel="shortcut icon" href="https://zhx6.github.io/favicon.ico?v=1640774590713">
 
@@ -117,65 +117,171 @@
         <div class="post-detail gt-bg-theme-color-second">
             <article class="gt-post-content">
                 <h2 class="post-title">
-                    PHP 获取每日BING图 并且缓存URL链接到本地JSON
+                    用 Alpine.js 构建一个 ajax 表单
                 </h2>
                 <div class="post-info">
                     <time class="post-time gt-c-content-color-first">
                         · 2021-12-29 ·
                     </time>
                     
-                        <a href="https://zhx6.github.io/kzHd-P3s0/" class="post-tags">
-                            # php
+                        <a href="https://zhx6.github.io/32nErYT3l/" class="post-tags">
+                            # 教程
+                        </a>
+                    
+                        <a href="https://zhx6.github.io/w37Imag7uO/" class="post-tags">
+                            # 代码
+                        </a>
+                    
+                        <a href="https://zhx6.github.io/t4xOsSPaQ_/" class="post-tags">
+                            # html
+                        </a>
+                    
+                        <a href="https://zhx6.github.io/of7B-xvXgw/" class="post-tags">
+                            # JavaScript
+                        </a>
+                    
+                        <a href="https://zhx6.github.io/6I99g2XiC/" class="post-tags">
+                            # 知识
+                        </a>
+                    
+                        <a href="https://zhx6.github.io/BatSXgP4IK/" class="post-tags">
+                            # 学习
                         </a>
                     
                 </div>
                 <div class="post-content">
-                    <p>将获取的BING图链接进行缓存，减少服务器负担，提升访问速度。</p>
-<pre><code class="language-php">&lt;?php
-$filename = &quot;./cache.json&quot;;
-if (file_exists($filename) === false) {
-    file_put_contents($filename, &quot;&quot;);
-}
-$handle = fopen($filename, &quot;r&quot;);
-$contents = fread($handle, filesize($filename));
-fclose($handle);
-$contents = json_decode($contents, true);
-if (filesize($filename) === 0) {
-    getBingImg();
-} else {
-    if ($contents['time'] === date(&quot;Ymd&quot;)) {
-        Header(&quot;Location: &quot; . $contents['url']);
-    } else {
-        getBingImg();
-    }
-}
-function getBingImg()
-{
-    $str = json_decode(file_get_contents('https://cn.bing.com/HPImageArchive.aspx?format=js&amp;idx=0&amp;n=1'));
-    if (isset($str-&gt;images[0])) {
-        $impurely = 'https://cn.bing.com' . $str-&gt;images[0]-&gt;url;
-    } else {
-        $impurely = false;
-    }
-    if ($impurely) {
-        global $contents;
-        if ($contents['url'] !== $impurely) {
-            global $filename;
-            $data = array(
-                &quot;time&quot; =&gt; date(&quot;Ymd&quot;),
-                &quot;url&quot; =&gt; $impurely
-            );
-            $data = json_encode($data);
-            file_put_contents($filename, $data);
-        }
-        Header(&quot;Location: &quot; . $impurely);
-        exit();
-    } else {
-        exit('error');
-    }
-}
-?&gt;
+                    <p>不解释Alpine.js是啥了，感兴趣的小伙伴自行百度，类似轻量Vue框架吧？这篇教程就带着大家入门一下</p>
+<p>首先，让我们建立一个像这样的常规联系表格：<br>
+<img src="https://zhx6.github.io/post-images/1640773740184.jpg" alt="" loading="lazy"><br>
+关键问题是我们如何将通过 ajax 发送数据并使用 Alpine 处理所有表单数据。 大家之前应该已经用 vanilla JS 或 jQuery 做过无数次了。常规方式必须通过引用获取所有元素，访问它们的值，然后发送数据。 Alpine可以使这项任务变得轻而易举，类似Vue和其他前端框架那样。</p>
+<p>下面我们建立一个简单的表单（姓名、电子邮件、消息提交按钮）</p>
+<pre><code class="language-html">&lt;form action=&quot;/contact&quot; method=&quot;POST&quot; class=&quot;w-64 mx-auto&quot;&gt;
+    &lt;div class=&quot;mb-4&quot;&gt;
+        &lt;label class=&quot;block mb-2&quot;&gt;Name:&lt;/label&gt;
+        &lt;input type=&quot;text&quot; name=&quot;name&quot; class=&quot;border w-full p-1&quot;&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;mb-4&quot;&gt;
+        &lt;label class=&quot;block mb-2&quot;&gt;E-mail:&lt;/label&gt;
+        &lt;input type=&quot;email&quot; name=&quot;email&quot; class=&quot;border w-full p-1&quot;&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;mb-4&quot;&gt;
+        &lt;label class=&quot;block mb-2&quot;&gt;Message:&lt;/label&gt;
+        &lt;textarea name=&quot;message&quot; class=&quot;border w-full p-1&quot;&gt;&lt;/textarea&gt;
+    &lt;/div&gt;
+    &lt;button class=&quot;bg-gray-700 hover:bg-gray-800 text-white w-full p-2&quot;&gt;Submit&lt;/button&gt;
+&lt;/form&gt;
 </code></pre>
+<p>这就是表单的基本 HTML 结构。 到目前为止，根本没有 javascript，它只是一个可以与页面重新加载一起使用的常规表单。 现在，让我们在上面撒一些 Alpine.js。 如下所示：</p>
+<pre><code class="language-html">&lt;script&gt;
+    function contactForm() {
+      return {
+        formData: {
+          name: '',
+          email: '',
+          message: ''
+        },
+      }
+    }
+&lt;/script&gt;
+</code></pre>
+<p>然后你只需要在里面添加那个函数调用<code>x-data</code>：</p>
+<pre><code class="language-html">&lt;form action=&quot;/contact&quot; method=&quot;POST&quot; class=&quot;w-64 mx-auto&quot; x-data=&quot;contactForm()&quot;&gt;
+</code></pre>
+<p>现在，介绍一下<code>x-model</code>指令。 这个指令可以使输入元素与组件数据保持同步。 因为<code>formData</code>在组件范围内有对象，因此我们可以在输入和文本区域中使用它们，如下所示：</p>
+<pre><code class="language-html">&lt;form action=&quot;/contact&quot; method=&quot;POST&quot; class=&quot;w-64 mx-auto&quot; x-data=&quot;contactForm()&quot;&gt;
+    &lt;div class=&quot;mb-4&quot;&gt;
+      &lt;label class=&quot;block mb-2&quot;&gt;Name:&lt;/label&gt;
+      &lt;input type=&quot;text&quot; name=&quot;name&quot; class=&quot;border w-full p-1&quot; x-model=&quot;formData.name&quot;&gt;
+    &lt;/div&gt;
+ 
+    &lt;div class=&quot;mb-4&quot;&gt;
+      &lt;label class=&quot;block mb-2&quot;&gt;E-mail:&lt;/label&gt;
+      &lt;input type=&quot;email&quot; name=&quot;email&quot; class=&quot;border w-full p-1&quot; x-model=&quot;formData.email&quot;&gt;
+    &lt;/div&gt;
+ 
+    &lt;div class=&quot;mb-4&quot;&gt;
+      &lt;label class=&quot;block mb-2&quot;&gt;Message:&lt;/label&gt;
+      &lt;textarea name=&quot;message&quot; class=&quot;border w-full p-1&quot; x-model=&quot;formData.message&quot;&gt;&lt;/textarea&gt;
+    &lt;/div&gt;
+    &lt;button class=&quot;bg-gray-700 hover:bg-gray-800 text-white w-full p-2&quot;&gt;Submit&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+<p>在<strong>vanilla JavaScript</strong>中，可能必须使用类似的内容获取元素，<code>getElementById</code>然后访问其值。 有了<code>x-model</code>，当输入<strong>input</strong>元素时，数据对象会自动更新为输入的任何内容。</p>
+<p>现在，至于 ajax 部分，让我们只使用<a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">fetch API</a>，因此我们不必拉外部依赖项，但您当然可以根据自己的需要进行调整：</p>
+<pre><code class="language-html">function contactForm() {
+    return {
+        formData: {
+            name: '',
+            email: '',
+            message: ''
+        },
+        message: '',
+ 
+        submitData() {
+            this.message = ''
+ 
+            fetch('/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(this.formData)
+            })
+            .then(() =&gt; {
+                this.message = 'Form sucessfully submitted!'
+            })
+            .catch(() =&gt; {
+                this.message = 'Ooops! Something went wrong!'
+            })
+        }
+    }
+}
+</code></pre>
+<p>并在表单结束标记之前添加此段落：</p>
+<pre><code class="language-html">&lt;p x-text=&quot;message&quot;&gt;&lt;/p&gt;
+</code></pre>
+<p>如果你不明白<code>.then</code>and<code>.catch</code>语句是 什么 ，别担心，你可以查看这篇关于<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promises 的</a>文章。基本上，整个<code>submitData</code>方法将对<code>/contact</code>路由执行 POST 请求 ，并将表单数据作为字符串化 JSON 传递。 如果一切都成功，<code>.then</code>则执行块，如果响应中有错误，则执行<code>.catch</code>。</p>
+<p>现在，我们必须在提交表单时调用此方法。 表单元素发出一个<code>submit</code>事件，所以我们可以使用<code>x-on</code>指令来监听它 ，因为我们不想重新加载页面，所以我们添加<code>.prevent</code>事件修饰符来“劫持”表单提交并使用我们自己的方法“submitData” ：</p>
+<pre><code class="language-html">&lt;form action=&quot;/contact&quot; method=&quot;POST&quot; class=&quot;w-64 mx-auto&quot; x-data=&quot;contactForm()&quot; @submit.prevent=&quot;submitData&quot;&gt;
+</code></pre>
+<p>就是这样！ 这样就获得了一个使用 Alpine.js 构建的可工作的 ajax 表单。 我们可以再加点东西，为提交按钮添加一些动态样式以改善用户体验：</p>
+<p>在头部添加这个样式标签（我只会添加这个样式，因为到目前为止，TailwindCSS 不支持开箱即用的禁用状态）：</p>
+<pre><code class="language-html">&lt;style&gt;
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+&lt;/style&gt;
+</code></pre>
+<p>现在，用这个替换旧的提交按钮：</p>
+<pre><code class="language-html">&lt;button class=&quot;bg-gray-700 hover:bg-gray-800 disabled:opacity-50 text-white w-full p-2 mb-4&quot; x-text=&quot;buttonLabel&quot; :disabled=&quot;loading&quot;&gt;&lt;/button&gt;
+</code></pre>
+<p>再介绍两个有趣的属性<code>x-text</code>指令和<code>:disabled</code>。我们将使用<code>x-text</code>来动态更改按钮的标签<code>:disabled</code>，并在提交表单时禁用该按钮。</p>
+<p><code>contactForm</code>使用以下内容更新函数：</p>
+<pre><code class="language-html">loading: false,
+buttonLabel: 'Submit',
+ 
+submitData() {
+    this.buttonLabel = 'Submitting...'
+    this.loading = true;
+    this.message = ''
+ 
+    fetch('/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(this.formData)
+    })
+    .then(() =&gt; {
+        this.message = 'Form sucessfully submitted!'
+    })
+    .catch(() =&gt; {
+        this.message = 'Ooops! Something went wrong!'
+    })
+    .finally(() =&gt; {
+        this.loading = false;
+        this.buttonLabel = 'Submit'
+    })
+}
+</code></pre>
+<p>就是这样！</p>
 
                 </div>
             </article>
@@ -184,8 +290,8 @@ function getBingImg()
         
             <div class="next-post">
                 <div class="next gt-c-content-color-first">下一篇</div>
-                <a href="https://zhx6.github.io/lU92bYTeX/" class="post-title gt-a-link">
-                    添加网页动态滚动进度条|滚动指示器
+                <a href="https://zhx6.github.io/CLWxuTMTo/" class="post-title gt-a-link">
+                    Telnet为什么不安全
                 </a>
             </div>
         

@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://zhx6.github.io</id>
     <title>皮皮虎&apos;s Blog</title>
-    <updated>2021-12-29T05:00:38.931Z</updated>
+    <updated>2021-12-29T10:43:16.929Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://zhx6.github.io"/>
     <link rel="self" href="https://zhx6.github.io/atom.xml"/>
@@ -10,6 +10,172 @@
     <logo>https://zhx6.github.io/images/avatar.png</logo>
     <icon>https://zhx6.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 皮皮虎&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[用 Alpine.js 构建一个 ajax 表单]]></title>
+        <id>https://zhx6.github.io/aPQPd4Z5x/</id>
+        <link href="https://zhx6.github.io/aPQPd4Z5x/">
+        </link>
+        <updated>2021-12-29T10:28:37.000Z</updated>
+        <content type="html"><![CDATA[<p>不解释Alpine.js是啥了，感兴趣的小伙伴自行百度，类似轻量Vue框架吧？这篇教程就带着大家入门一下</p>
+<p>首先，让我们建立一个像这样的常规联系表格：<br>
+<img src="https://zhx6.github.io/post-images/1640773740184.jpg" alt="" loading="lazy"><br>
+关键问题是我们如何将通过 ajax 发送数据并使用 Alpine 处理所有表单数据。 大家之前应该已经用 vanilla JS 或 jQuery 做过无数次了。常规方式必须通过引用获取所有元素，访问它们的值，然后发送数据。 Alpine可以使这项任务变得轻而易举，类似Vue和其他前端框架那样。</p>
+<p>下面我们建立一个简单的表单（姓名、电子邮件、消息提交按钮）</p>
+<pre><code class="language-html">&lt;form action=&quot;/contact&quot; method=&quot;POST&quot; class=&quot;w-64 mx-auto&quot;&gt;
+    &lt;div class=&quot;mb-4&quot;&gt;
+        &lt;label class=&quot;block mb-2&quot;&gt;Name:&lt;/label&gt;
+        &lt;input type=&quot;text&quot; name=&quot;name&quot; class=&quot;border w-full p-1&quot;&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;mb-4&quot;&gt;
+        &lt;label class=&quot;block mb-2&quot;&gt;E-mail:&lt;/label&gt;
+        &lt;input type=&quot;email&quot; name=&quot;email&quot; class=&quot;border w-full p-1&quot;&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;mb-4&quot;&gt;
+        &lt;label class=&quot;block mb-2&quot;&gt;Message:&lt;/label&gt;
+        &lt;textarea name=&quot;message&quot; class=&quot;border w-full p-1&quot;&gt;&lt;/textarea&gt;
+    &lt;/div&gt;
+    &lt;button class=&quot;bg-gray-700 hover:bg-gray-800 text-white w-full p-2&quot;&gt;Submit&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+<p>这就是表单的基本 HTML 结构。 到目前为止，根本没有 javascript，它只是一个可以与页面重新加载一起使用的常规表单。 现在，让我们在上面撒一些 Alpine.js。 如下所示：</p>
+<pre><code class="language-html">&lt;script&gt;
+    function contactForm() {
+      return {
+        formData: {
+          name: '',
+          email: '',
+          message: ''
+        },
+      }
+    }
+&lt;/script&gt;
+</code></pre>
+<p>然后你只需要在里面添加那个函数调用<code>x-data</code>：</p>
+<pre><code class="language-html">&lt;form action=&quot;/contact&quot; method=&quot;POST&quot; class=&quot;w-64 mx-auto&quot; x-data=&quot;contactForm()&quot;&gt;
+</code></pre>
+<p>现在，介绍一下<code>x-model</code>指令。 这个指令可以使输入元素与组件数据保持同步。 因为<code>formData</code>在组件范围内有对象，因此我们可以在输入和文本区域中使用它们，如下所示：</p>
+<pre><code class="language-html">&lt;form action=&quot;/contact&quot; method=&quot;POST&quot; class=&quot;w-64 mx-auto&quot; x-data=&quot;contactForm()&quot;&gt;
+    &lt;div class=&quot;mb-4&quot;&gt;
+      &lt;label class=&quot;block mb-2&quot;&gt;Name:&lt;/label&gt;
+      &lt;input type=&quot;text&quot; name=&quot;name&quot; class=&quot;border w-full p-1&quot; x-model=&quot;formData.name&quot;&gt;
+    &lt;/div&gt;
+ 
+    &lt;div class=&quot;mb-4&quot;&gt;
+      &lt;label class=&quot;block mb-2&quot;&gt;E-mail:&lt;/label&gt;
+      &lt;input type=&quot;email&quot; name=&quot;email&quot; class=&quot;border w-full p-1&quot; x-model=&quot;formData.email&quot;&gt;
+    &lt;/div&gt;
+ 
+    &lt;div class=&quot;mb-4&quot;&gt;
+      &lt;label class=&quot;block mb-2&quot;&gt;Message:&lt;/label&gt;
+      &lt;textarea name=&quot;message&quot; class=&quot;border w-full p-1&quot; x-model=&quot;formData.message&quot;&gt;&lt;/textarea&gt;
+    &lt;/div&gt;
+    &lt;button class=&quot;bg-gray-700 hover:bg-gray-800 text-white w-full p-2&quot;&gt;Submit&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+<p>在<strong>vanilla JavaScript</strong>中，可能必须使用类似的内容获取元素，<code>getElementById</code>然后访问其值。 有了<code>x-model</code>，当输入<strong>input</strong>元素时，数据对象会自动更新为输入的任何内容。</p>
+<p>现在，至于 ajax 部分，让我们只使用<a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">fetch API</a>，因此我们不必拉外部依赖项，但您当然可以根据自己的需要进行调整：</p>
+<pre><code class="language-html">function contactForm() {
+    return {
+        formData: {
+            name: '',
+            email: '',
+            message: ''
+        },
+        message: '',
+ 
+        submitData() {
+            this.message = ''
+ 
+            fetch('/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(this.formData)
+            })
+            .then(() =&gt; {
+                this.message = 'Form sucessfully submitted!'
+            })
+            .catch(() =&gt; {
+                this.message = 'Ooops! Something went wrong!'
+            })
+        }
+    }
+}
+</code></pre>
+<p>并在表单结束标记之前添加此段落：</p>
+<pre><code class="language-html">&lt;p x-text=&quot;message&quot;&gt;&lt;/p&gt;
+</code></pre>
+<p>如果你不明白<code>.then</code>and<code>.catch</code>语句是 什么 ，别担心，你可以查看这篇关于<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promises 的</a>文章。基本上，整个<code>submitData</code>方法将对<code>/contact</code>路由执行 POST 请求 ，并将表单数据作为字符串化 JSON 传递。 如果一切都成功，<code>.then</code>则执行块，如果响应中有错误，则执行<code>.catch</code>。</p>
+<p>现在，我们必须在提交表单时调用此方法。 表单元素发出一个<code>submit</code>事件，所以我们可以使用<code>x-on</code>指令来监听它 ，因为我们不想重新加载页面，所以我们添加<code>.prevent</code>事件修饰符来“劫持”表单提交并使用我们自己的方法“submitData” ：</p>
+<pre><code class="language-html">&lt;form action=&quot;/contact&quot; method=&quot;POST&quot; class=&quot;w-64 mx-auto&quot; x-data=&quot;contactForm()&quot; @submit.prevent=&quot;submitData&quot;&gt;
+</code></pre>
+<p>就是这样！ 这样就获得了一个使用 Alpine.js 构建的可工作的 ajax 表单。 我们可以再加点东西，为提交按钮添加一些动态样式以改善用户体验：</p>
+<p>在头部添加这个样式标签（我只会添加这个样式，因为到目前为止，TailwindCSS 不支持开箱即用的禁用状态）：</p>
+<pre><code class="language-html">&lt;style&gt;
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+&lt;/style&gt;
+</code></pre>
+<p>现在，用这个替换旧的提交按钮：</p>
+<pre><code class="language-html">&lt;button class=&quot;bg-gray-700 hover:bg-gray-800 disabled:opacity-50 text-white w-full p-2 mb-4&quot; x-text=&quot;buttonLabel&quot; :disabled=&quot;loading&quot;&gt;&lt;/button&gt;
+</code></pre>
+<p>再介绍两个有趣的属性<code>x-text</code>指令和<code>:disabled</code>。我们将使用<code>x-text</code>来动态更改按钮的标签<code>:disabled</code>，并在提交表单时禁用该按钮。</p>
+<p><code>contactForm</code>使用以下内容更新函数：</p>
+<pre><code class="language-html">loading: false,
+buttonLabel: 'Submit',
+ 
+submitData() {
+    this.buttonLabel = 'Submitting...'
+    this.loading = true;
+    this.message = ''
+ 
+    fetch('/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(this.formData)
+    })
+    .then(() =&gt; {
+        this.message = 'Form sucessfully submitted!'
+    })
+    .catch(() =&gt; {
+        this.message = 'Ooops! Something went wrong!'
+    })
+    .finally(() =&gt; {
+        this.loading = false;
+        this.buttonLabel = 'Submit'
+    })
+}
+</code></pre>
+<p>就是这样！</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Telnet为什么不安全]]></title>
+        <id>https://zhx6.github.io/CLWxuTMTo/</id>
+        <link href="https://zhx6.github.io/CLWxuTMTo/">
+        </link>
+        <updated>2021-12-29T10:21:32.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="简介">简介</h2>
+<p>Telnet（Teletype Network）属于<strong>应用层</strong>，默认端口为<strong>23</strong>，是一个<strong>明文传送协议</strong>（包括用户名、密码、内容都在互联网上传送），同时分为客户端与服务端进行交互。</p>
+<h2 id="流程">流程</h2>
+<p>Wireshark抓包图如下<br>
+<img src="https://zhx6.github.io/post-images/1640773447742.jpg" alt="" loading="lazy"><br>
+通过分析数据包，Telnet整个流程分为四个阶段为了更好理解如下图所示<br>
+<img src="https://zhx6.github.io/post-images/1640773466870.jpg" alt="" loading="lazy"></p>
+<h3 id="第一阶段tcp三次握手">第一阶段：TCP三次握手</h3>
+<p>很显然，Telnet协议是TCP/IP协议族的一员。由客户端主动向目标服务端建立连接。（三次握手这里暂时不展开讲）</p>
+<h3 id="第二阶段双方通过nvt协商">第二阶段：双方通过NVT协商</h3>
+<p>Telnet协议支持应用不同的操作系统中，并可以很好的在不同操作系统中传输命令；通俗来讲NVT起到了翻译的作用，支持异构性。协商的内容包括窗口大小、工作模式等等。</p>
+<h3 id="第三阶段双通过nvt传输命令">第三阶段：双通过NVT传输命令</h3>
+<p>双方协商完成后，服务端回显给客户端登录命令行，进行验证，验证通过后进行后续的命令操作。</p>
+<h3 id="第四阶段撤销tcp连接">第四阶段：撤销TCP连接</h3>
+<p>客户端对服务端进行撤销连接，此时是一个TCP链接；双方进行FIN，ACK。</p>
+<h2 id="数据">数据：</h2>
+<p>由于Telnet是明文传输，很容易被抓到进行分析从而入侵主机；一旦被攻击者抓到包，这个就相当于在裸跑，毫无秘密可言。<br>
+<img src="https://zhx6.github.io/post-images/1640773612813.jpg" alt="" loading="lazy"></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[PHP 获取每日BING图 并且缓存URL链接到本地JSON]]></title>
         <id>https://zhx6.github.io/d8K-PzlGJ/</id>
