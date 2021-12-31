@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://zhx6.github.io</id>
     <title>皮皮虎&apos;s Blog</title>
-    <updated>2021-12-31T14:24:52.507Z</updated>
+    <updated>2021-12-31T14:30:19.130Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://zhx6.github.io"/>
     <link rel="self" href="https://zhx6.github.io/atom.xml"/>
@@ -28,7 +28,11 @@
 <li>支持安装<code>Nginx</code>反代<code>Tomcat</code>；</li>
 </ul>
 <h2 id="预览">预览</h2>
-<figure data-type="image" tabindex="1"><img src="https://zhx6.github.io/post-images/1640960037938.png" alt="" loading="lazy"></figure>
+<p><img src="https://zhx6.github.io/post-images/1640960969594.png" alt="" loading="lazy"><br>
+<img src="https://zhx6.github.io/post-images/1640960975162.png" alt="" loading="lazy"><br>
+<img src="https://zhx6.github.io/post-images/1640960980257.png" alt="" loading="lazy"><br>
+<img src="https://zhx6.github.io/post-images/1640960990769.png" alt="" loading="lazy"><br>
+<img src="https://zhx6.github.io/post-images/1640960037938.png" alt="" loading="lazy"></p>
 <h2 id="中文支持">中文支持</h2>
 <p>如果需要中文显示，需要修改系统语言，并添加中文字体；<br>
 安装中文语言包</p>
