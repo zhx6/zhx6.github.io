@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://zhx6.github.io</id>
     <title>皮皮虎&apos;s Blog</title>
-    <updated>2021-12-29T10:47:31.501Z</updated>
+    <updated>2021-12-31T14:19:49.911Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://zhx6.github.io"/>
     <link rel="self" href="https://zhx6.github.io/atom.xml"/>
@@ -11,436 +11,1202 @@
     <icon>https://zhx6.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 皮皮虎&apos;s Blog</rights>
     <entry>
-        <title type="html"><![CDATA[用 Alpine.js 构建一个 ajax 表单]]></title>
-        <id>https://zhx6.github.io/aPQPd4Z5x/</id>
-        <link href="https://zhx6.github.io/aPQPd4Z5x/">
+        <title type="html"><![CDATA[Linux一键安装可视化桌面环境支持浏览器及RDP访问]]></title>
+        <id>https://zhx6.github.io/f5hKN-uUY/</id>
+        <link href="https://zhx6.github.io/f5hKN-uUY/">
         </link>
-        <updated>2021-12-29T10:28:37.000Z</updated>
-        <content type="html"><![CDATA[<p>不解释Alpine.js是啥了，感兴趣的小伙伴自行百度，类似轻量Vue框架吧？这篇教程就带着大家入门一下</p>
-<p>首先，让我们建立一个像这样的常规联系表格：<br>
-<img src="https://zhx6.github.io/post-images/1640773740184.jpg" alt="" loading="lazy"><br>
-关键问题是我们如何将通过 ajax 发送数据并使用 Alpine 处理所有表单数据。 大家之前应该已经用 vanilla JS 或 jQuery 做过无数次了。常规方式必须通过引用获取所有元素，访问它们的值，然后发送数据。 Alpine可以使这项任务变得轻而易举，类似Vue和其他前端框架那样。</p>
-<p>下面我们建立一个简单的表单（姓名、电子邮件、消息提交按钮）</p>
-<pre><code class="language-html">&lt;form action=&quot;/contact&quot; method=&quot;POST&quot; class=&quot;w-64 mx-auto&quot;&gt;
-    &lt;div class=&quot;mb-4&quot;&gt;
-        &lt;label class=&quot;block mb-2&quot;&gt;Name:&lt;/label&gt;
-        &lt;input type=&quot;text&quot; name=&quot;name&quot; class=&quot;border w-full p-1&quot;&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;mb-4&quot;&gt;
-        &lt;label class=&quot;block mb-2&quot;&gt;E-mail:&lt;/label&gt;
-        &lt;input type=&quot;email&quot; name=&quot;email&quot; class=&quot;border w-full p-1&quot;&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;mb-4&quot;&gt;
-        &lt;label class=&quot;block mb-2&quot;&gt;Message:&lt;/label&gt;
-        &lt;textarea name=&quot;message&quot; class=&quot;border w-full p-1&quot;&gt;&lt;/textarea&gt;
-    &lt;/div&gt;
-    &lt;button class=&quot;bg-gray-700 hover:bg-gray-800 text-white w-full p-2&quot;&gt;Submit&lt;/button&gt;
-&lt;/form&gt;
-</code></pre>
-<p>这就是表单的基本 HTML 结构。 到目前为止，根本没有 javascript，它只是一个可以与页面重新加载一起使用的常规表单。 现在，让我们在上面撒一些 Alpine.js。 如下所示：</p>
-<pre><code class="language-html">&lt;script&gt;
-    function contactForm() {
-      return {
-        formData: {
-          name: '',
-          email: '',
-          message: ''
-        },
-      }
-    }
-&lt;/script&gt;
-</code></pre>
-<p>然后你只需要在里面添加那个函数调用<code>x-data</code>：</p>
-<pre><code class="language-html">&lt;form action=&quot;/contact&quot; method=&quot;POST&quot; class=&quot;w-64 mx-auto&quot; x-data=&quot;contactForm()&quot;&gt;
-</code></pre>
-<p>现在，介绍一下<code>x-model</code>指令。 这个指令可以使输入元素与组件数据保持同步。 因为<code>formData</code>在组件范围内有对象，因此我们可以在输入和文本区域中使用它们，如下所示：</p>
-<pre><code class="language-html">&lt;form action=&quot;/contact&quot; method=&quot;POST&quot; class=&quot;w-64 mx-auto&quot; x-data=&quot;contactForm()&quot;&gt;
-    &lt;div class=&quot;mb-4&quot;&gt;
-      &lt;label class=&quot;block mb-2&quot;&gt;Name:&lt;/label&gt;
-      &lt;input type=&quot;text&quot; name=&quot;name&quot; class=&quot;border w-full p-1&quot; x-model=&quot;formData.name&quot;&gt;
-    &lt;/div&gt;
- 
-    &lt;div class=&quot;mb-4&quot;&gt;
-      &lt;label class=&quot;block mb-2&quot;&gt;E-mail:&lt;/label&gt;
-      &lt;input type=&quot;email&quot; name=&quot;email&quot; class=&quot;border w-full p-1&quot; x-model=&quot;formData.email&quot;&gt;
-    &lt;/div&gt;
- 
-    &lt;div class=&quot;mb-4&quot;&gt;
-      &lt;label class=&quot;block mb-2&quot;&gt;Message:&lt;/label&gt;
-      &lt;textarea name=&quot;message&quot; class=&quot;border w-full p-1&quot; x-model=&quot;formData.message&quot;&gt;&lt;/textarea&gt;
-    &lt;/div&gt;
-    &lt;button class=&quot;bg-gray-700 hover:bg-gray-800 text-white w-full p-2&quot;&gt;Submit&lt;/button&gt;
-&lt;/form&gt;
-</code></pre>
-<p>在<strong>vanilla JavaScript</strong>中，可能必须使用类似的内容获取元素，<code>getElementById</code>然后访问其值。 有了<code>x-model</code>，当输入<strong>input</strong>元素时，数据对象会自动更新为输入的任何内容。</p>
-<p>现在，至于 ajax 部分，让我们只使用<a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">fetch API</a>，因此我们不必拉外部依赖项，但您当然可以根据自己的需要进行调整：</p>
-<pre><code class="language-html">function contactForm() {
-    return {
-        formData: {
-            name: '',
-            email: '',
-            message: ''
-        },
-        message: '',
- 
-        submitData() {
-            this.message = ''
- 
-            fetch('/contact', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(this.formData)
-            })
-            .then(() =&gt; {
-                this.message = 'Form sucessfully submitted!'
-            })
-            .catch(() =&gt; {
-                this.message = 'Ooops! Something went wrong!'
-            })
-        }
-    }
-}
-</code></pre>
-<p>并在表单结束标记之前添加此段落：</p>
-<pre><code class="language-html">&lt;p x-text=&quot;message&quot;&gt;&lt;/p&gt;
-</code></pre>
-<p>如果你不明白<code>.then</code>and<code>.catch</code>语句是 什么 ，别担心，你可以查看这篇关于<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promises 的</a>文章。基本上，整个<code>submitData</code>方法将对<code>/contact</code>路由执行 POST 请求 ，并将表单数据作为字符串化 JSON 传递。 如果一切都成功，<code>.then</code>则执行块，如果响应中有错误，则执行<code>.catch</code>。</p>
-<p>现在，我们必须在提交表单时调用此方法。 表单元素发出一个<code>submit</code>事件，所以我们可以使用<code>x-on</code>指令来监听它 ，因为我们不想重新加载页面，所以我们添加<code>.prevent</code>事件修饰符来“劫持”表单提交并使用我们自己的方法“submitData” ：</p>
-<pre><code class="language-html">&lt;form action=&quot;/contact&quot; method=&quot;POST&quot; class=&quot;w-64 mx-auto&quot; x-data=&quot;contactForm()&quot; @submit.prevent=&quot;submitData&quot;&gt;
-</code></pre>
-<p>就是这样！ 这样就获得了一个使用 Alpine.js 构建的可工作的 ajax 表单。 我们可以再加点东西，为提交按钮添加一些动态样式以改善用户体验：</p>
-<p>在头部添加这个样式标签（我只会添加这个样式，因为到目前为止，TailwindCSS 不支持开箱即用的禁用状态）：</p>
-<pre><code class="language-html">&lt;style&gt;
-    button:disabled {
-      cursor: not-allowed;
-      opacity: 0.5;
-    }
-&lt;/style&gt;
-</code></pre>
-<p>现在，用这个替换旧的提交按钮：</p>
-<pre><code class="language-html">&lt;button class=&quot;bg-gray-700 hover:bg-gray-800 disabled:opacity-50 text-white w-full p-2 mb-4&quot; x-text=&quot;buttonLabel&quot; :disabled=&quot;loading&quot;&gt;&lt;/button&gt;
-</code></pre>
-<p>再介绍两个有趣的属性<code>x-text</code>指令和<code>:disabled</code>。我们将使用<code>x-text</code>来动态更改按钮的标签<code>:disabled</code>，并在提交表单时禁用该按钮。</p>
-<p><code>contactForm</code>使用以下内容更新函数：</p>
-<pre><code class="language-html">loading: false,
-buttonLabel: 'Submit',
- 
-submitData() {
-    this.buttonLabel = 'Submitting...'
-    this.loading = true;
-    this.message = ''
- 
-    fetch('/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(this.formData)
-    })
-    .then(() =&gt; {
-        this.message = 'Form sucessfully submitted!'
-    })
-    .catch(() =&gt; {
-        this.message = 'Ooops! Something went wrong!'
-    })
-    .finally(() =&gt; {
-        this.loading = false;
-        this.buttonLabel = 'Submit'
-    })
-}
-</code></pre>
-<p>就是这样！</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Telnet为什么不安全]]></title>
-        <id>https://zhx6.github.io/CLWxuTMTo/</id>
-        <link href="https://zhx6.github.io/CLWxuTMTo/">
-        </link>
-        <updated>2021-12-29T10:21:32.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="简介">简介</h2>
-<p>Telnet（Teletype Network）属于<strong>应用层</strong>，默认端口为<strong>23</strong>，是一个<strong>明文传送协议</strong>（包括用户名、密码、内容都在互联网上传送），同时分为客户端与服务端进行交互。</p>
-<h2 id="流程">流程</h2>
-<p>Wireshark抓包图如下<br>
-<img src="https://zhx6.github.io/post-images/1640773447742.jpg" alt="" loading="lazy"><br>
-通过分析数据包，Telnet整个流程分为四个阶段为了更好理解如下图所示<br>
-<img src="https://zhx6.github.io/post-images/1640773466870.jpg" alt="" loading="lazy"></p>
-<h3 id="第一阶段tcp三次握手">第一阶段：TCP三次握手</h3>
-<p>很显然，Telnet协议是TCP/IP协议族的一员。由客户端主动向目标服务端建立连接。（三次握手这里暂时不展开讲）</p>
-<h3 id="第二阶段双方通过nvt协商">第二阶段：双方通过NVT协商</h3>
-<p>Telnet协议支持应用不同的操作系统中，并可以很好的在不同操作系统中传输命令；通俗来讲NVT起到了翻译的作用，支持异构性。协商的内容包括窗口大小、工作模式等等。</p>
-<h3 id="第三阶段双通过nvt传输命令">第三阶段：双通过NVT传输命令</h3>
-<p>双方协商完成后，服务端回显给客户端登录命令行，进行验证，验证通过后进行后续的命令操作。</p>
-<h3 id="第四阶段撤销tcp连接">第四阶段：撤销TCP连接</h3>
-<p>客户端对服务端进行撤销连接，此时是一个TCP链接；双方进行FIN，ACK。</p>
-<h2 id="数据">数据：</h2>
-<p>由于Telnet是明文传输，很容易被抓到进行分析从而入侵主机；一旦被攻击者抓到包，这个就相当于在裸跑，毫无秘密可言。<br>
-<img src="https://zhx6.github.io/post-images/1640773612813.jpg" alt="" loading="lazy"></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[PHP 获取每日BING图 并且缓存URL链接到本地JSON]]></title>
-        <id>https://zhx6.github.io/d8K-PzlGJ/</id>
-        <link href="https://zhx6.github.io/d8K-PzlGJ/">
-        </link>
-        <updated>2021-12-29T03:43:06.000Z</updated>
-        <content type="html"><![CDATA[<p>将获取的BING图链接进行缓存，减少服务器负担，提升访问速度。</p>
-<pre><code class="language-php">&lt;?php
-$filename = &quot;./cache.json&quot;;
-if (file_exists($filename) === false) {
-    file_put_contents($filename, &quot;&quot;);
-}
-$handle = fopen($filename, &quot;r&quot;);
-$contents = fread($handle, filesize($filename));
-fclose($handle);
-$contents = json_decode($contents, true);
-if (filesize($filename) === 0) {
-    getBingImg();
-} else {
-    if ($contents['time'] === date(&quot;Ymd&quot;)) {
-        Header(&quot;Location: &quot; . $contents['url']);
-    } else {
-        getBingImg();
-    }
-}
-function getBingImg()
-{
-    $str = json_decode(file_get_contents('https://cn.bing.com/HPImageArchive.aspx?format=js&amp;idx=0&amp;n=1'));
-    if (isset($str-&gt;images[0])) {
-        $impurely = 'https://cn.bing.com' . $str-&gt;images[0]-&gt;url;
-    } else {
-        $impurely = false;
-    }
-    if ($impurely) {
-        global $contents;
-        if ($contents['url'] !== $impurely) {
-            global $filename;
-            $data = array(
-                &quot;time&quot; =&gt; date(&quot;Ymd&quot;),
-                &quot;url&quot; =&gt; $impurely
-            );
-            $data = json_encode($data);
-            file_put_contents($filename, $data);
-        }
-        Header(&quot;Location: &quot; . $impurely);
-        exit();
-    } else {
-        exit('error');
-    }
-}
-?&gt;
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[添加网页动态滚动进度条|滚动指示器]]></title>
-        <id>https://zhx6.github.io/lU92bYTeX/</id>
-        <link href="https://zhx6.github.io/lU92bYTeX/">
-        </link>
-        <updated>2021-12-29T03:40:40.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="代码">代码</h2>
-<pre><code class="language-php">&lt;!--动态滚动进度条--&gt;
-&lt;div class=&quot;scroll-line&quot; style=&quot;z-index: 999;position: fixed;height: 3px;margin-top: 0px;background-color: #6B999B;width: 0%;&quot;&gt;&lt;/div&gt;
-&lt;script type=&quot;text/javascript&quot;&gt;
-    $(window).scroll(function() {
-        var winTop = $(window).scrollTop(), //滚动条的位置
-                docHeight = $(document).height(),   //文档高度
-                winHeight = $(window).height(); //窗口高度
- 
-        var scrolled = (winTop / (docHeight - winHeight))*100;
- 
-        $('.scroll-line').css('width', (scrolled + '%'));
-    });
-&lt;/script&gt;
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Python float乘法运算小数点后会出现很多位小数问题]]></title>
-        <id>https://zhx6.github.io/A88jsrz2/</id>
-        <link href="https://zhx6.github.io/A88jsrz2/">
-        </link>
-        <updated>2021-12-28T17:00:24.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="前言">前言</h2>
-<p>说实话 这问题挺艹蛋的，我调试了半天，发现是Python所有浮点数规范遵从IEEEE754二进制浮点数算术标准（ANSI/IEEE Std 754-1985），说一下我想实现什么吧，就是出价的数字</p>
-<pre><code>出价 78.6
-换算成程序出价是要乘个100000
-真实结果：7860000
-</code></pre>
-<h2 id="错误代码">错误代码</h2>
-<pre><code>(78 + round(random.uniform(1, 0), 2)) * 100000
-</code></pre>
-<h3 id="运行结果">运行结果</h3>
-<pre><code>7880000.0
-7816000.0
-7859000.0
-7834999.999999999
-7820999.999999999
-7859999.999999999
-</code></pre>
-<p>这肯定不对的啊.....<br>
-后来查到一篇文章讲了这个 <a href="https://xufive.blog.csdn.net/article/details/103816159">https://xufive.blog.csdn.net/article/details/103816159</a><br>
-真是太恶心了</p>
-<h2 id="解决方法">解决方法</h2>
-<pre><code>from decimal import *
-Decimal((78 + round(random.uniform(1, 0), 2)) * 100000).quantize(Decimal('0'))
-</code></pre>
-<p>用了Decimal模块完美解决此问题</p>
-<h3 id="结果">结果</h3>
-<pre><code>7844000
-7898000
-7900000
-7825000
-7872000
-7843000
-7810000
-7866000
-7807000
-7836000
-7826000
-7803000
-7832000
-7868000
-7851000
-7868000
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[国内开源镜像站点汇总]]></title>
-        <id>https://zhx6.github.io/HS8j95/</id>
-        <link href="https://zhx6.github.io/HS8j95/">
-        </link>
-        <updated>2021-12-28T16:47:09.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="站点版">站点版</h2>
-<h3 id="企业站">企业站</h3>
-<p>搜狐：<a href="http://mirrors.sohu.com/">http://mirrors.sohu.com/</a><br>
-腾讯：<a href="https://mirrors.cloud.tencent.com/">https://mirrors.cloud.tencent.com/</a><br>
-网易：<a href="http://mirrors.163.com/">http://mirrors.163.com/</a><br>
-阿里：<a href="http://mirrors.aliyun.com/">http://mirrors.aliyun.com/</a><br>
-华为：<a href="https://mirrors.huaweicloud.com/">https://mirrors.huaweicloud.com/</a></p>
-<h3 id="教育站">教育站</h3>
-<p>上海交通大学：<a href="http://ftp.sjtu.edu.cn/html/resources.xml">http://ftp.sjtu.edu.cn/html/resources.xml</a>（部分移动运营商出口状况不佳，无法访问）<br>
-华中科技大学：<a href="http://mirror.hust.edu.cn/">http://mirror.hust.edu.cn/</a>（当前已用容量估计：4.83T）<br>
-清华大学：<a href="http://mirrors.tuna.tsinghua.edu.cn/">http://mirrors.tuna.tsinghua.edu.cn/</a>（当前已用容量估计：9.8T）<br>
-北京理工大学：<a href="http://mirror.bit.edu.cn/web/">http://mirror.bit.edu.cn/web/</a><br>
-兰州大学：<a href="http://mirror.lzu.edu.cn/">http://mirror.lzu.edu.cn/</a><br>
-中国科技大学：<a href="http://mirrors.ustc.edu.cn/">http://mirrors.ustc.edu.cn/</a>（当前已用容量估计：21.32T）<br>
-大连东软信息学院：<a href="http://mirrors.neusoft.edu.cn/">http://mirrors.neusoft.edu.cn/</a>（当前已用容量估计：2.5T）<br>
-东北大学：<a href="http://mirror.neu.edu.cn/">http://mirror.neu.edu.cn/</a><br>
-大连理工大学：<a href="http://mirror.dlut.edu.cn/">http://mirror.dlut.edu.cn/</a><br>
-哈尔滨工业大学：<a href="http://run.hit.edu.cn/html/">http://run.hit.edu.cn/html/</a>（部分联通运营商出口状况不佳，无法访问）<br>
-北京交通大学：<a href="http://mirror.bjtu.edu.cn/cn/">http://mirror.bjtu.edu.cn/cn/</a><br>
-中国地质大学：<a href="http://mirrors.cug.edu.cn/">http://mirrors.cug.edu.cn/</a>（当前已用容量估计：2.3T）<br>
-浙江大学：<a href="http://mirrors.zju.edu.cn/">http://mirrors.zju.edu.cn/</a><br>
-厦门大学：<a href="http://mirrors.xmu.edu.cn/">http://mirrors.xmu.edu.cn/</a><br>
-中山大学：<a href="http://mirror.sysu.edu.cn/">http://mirror.sysu.edu.cn/</a><br>
-重庆大学：<a href="http://mirrors.cqu.edu.cn/">http://mirrors.cqu.edu.cn/</a>（当前已用容量估计：3.93T）<br>
-北京化工大学：<a href="http://ubuntu.buct.edu.cn/">http://ubuntu.buct.edu.cn/</a>（AndroidSDK镜像仅供校内使用，当前已用容量估计：1.72T）<br>
-南阳理工学院：<a href="http://mirror.nyist.edu.cn/">http://mirror.nyist.edu.cn/</a><br>
-中国科学院：<a href="http://www.opencas.org/mirrors/">http://www.opencas.org/mirrors/</a><br>
-电子科技大学星辰工作室：<a href="http://mirrors.stuhome.net/">http://mirrors.stuhome.net/</a>（当前已用容量估计：1.08T）<br>
-西北农林科技大学：<a href="http://mirrors.nwsuaf.edu.cn/">http://mirrors.nwsuaf.edu.cn/</a>（只做CentOS镜像，当前已用容量估计：140GB）</p>
-<h3 id="其他站">其他站</h3>
-<p>首都在线科技股份有限公司（英文名CapitalOnlineDataService）：<a href="http://mirrors.yun-idc.com/">http://mirrors.yun-idc.com/</a><br>
-常州贝特康姆软件技术有限公司：<a href="http://centos.bitcomm.cn/">http://centos.bitcomm.cn/</a>（只做CentOS镜像，当前已用容量估计：140GB）<br>
-公云PubYun（母公司为贝特康姆）：<a href="http://mirrors.pubyun.com/">http://mirrors.pubyun.com/</a><br>
-中国互联网络信息中心：<a href="http://mirrors.cnnic.cn/">http://mirrors.cnnic.cn/</a>（只做Apache镜像，当前已用容量估计：120GB）</p>
-<h2 id="软件版">软件版</h2>
-<h3 id="操作系统类">操作系统类</h3>
-<h4 id="ubuntu">Ubuntu</h4>
-<p>阿里云：<a href="http://mirrors.aliyun.com/ubuntu-releases/">http://mirrors.aliyun.com/ubuntu-releases/</a><br>
-网易：<a href="http://mirrors.163.com/ubuntu-releases/">http://mirrors.163.com/ubuntu-releases/</a><br>
-搜狐：<a href="http://mirrors.sohu.com/ubuntu-releases/">http://mirrors.sohu.com/ubuntu-releases/</a>（搜狐在12年之后似乎不同步了）<br>
-首都在线科技股份有限公司：<a href="http://mirrors.yun-idc.com/ubuntu-releases/">http://mirrors.yun-idc.com/ubuntu-releases/</a></p>
-<h4 id="centos">CentOS</h4>
-<p>网易：<a href="http://mirrors.163.com/centos/">http://mirrors.163.com/centos/</a><br>
-搜狐：<a href="http://mirrors.sohu.com/centos/">http://mirrors.sohu.com/centos/</a><br>
-阿里云：<a href="http://mirrors.aliyun.com/centos/">http://mirrors.aliyun.com/centos/</a></p>
-<h4 id="tomcat-apache">Tomcat、Apache</h4>
-<p>中国互联网络信息中心：<a href="http://mirrors.cnnic.cn/apache/">http://mirrors.cnnic.cn/apache/</a><br>
-华中科技大学：<a href="http://mirrors.hust.edu.cn/apache/">http://mirrors.hust.edu.cn/apache/</a></p>
-<h4 id="mysql">MySQL</h4>
-<p>搜狐：<a href="http://mirrors.sohu.com/mysql">http://mirrors.sohu.com/mysql</a><br>
-中国科技技术大学：<a href="http://mirrors.ustc.edu.cn/mysql-ftp/Downloads">http://mirrors.ustc.edu.cn/mysql-ftp/Downloads</a></p>
-<h4 id="postgresql">PostgreSQL</h4>
-<p>浙江大学：<a href="http://mirrors.zju.edu.cn/postgresql/">http://mirrors.zju.edu.cn/postgresql/</a></p>
-<h4 id="mariadb">MariaDB</h4>
-<p>中国科技技术大学：<a href="https://mirrors.ustc.edu.cn/mariadb/">https://mirrors.ustc.edu.cn/mariadb/</a></p>
-<h4 id="videolan">VideoLAN</h4>
-<p>大连东软信息学院：<a href="http://mirrors.neusoft.edu.cn/videolan/">http://mirrors.neusoft.edu.cn/videolan/</a><br>
-中国科技大学：<a href="http://mirrors.ustc.edu.cn/videolan-ftp/">http://mirrors.ustc.edu.cn/videolan-ftp/</a></p>
-<h3 id="开发工具类">开发工具类</h3>
-<h4 id="eclipse">Eclipse</h4>
-<p>中国科技大学：<a href="http://mirrors.ustc.edu.cn/eclipse/">http://mirrors.ustc.edu.cn/eclipse/</a><br>
-东北大学B：<a href="http://mirror.neu.edu.cn/eclipse/">http://mirror.neu.edu.cn/eclipse/</a></p>
-<h2 id="官方镜像列表状态地址">官方镜像列表状态地址</h2>
-<p>CentOS：<a href="http://mirror-status.centos.org/#cn">http://mirror-status.centos.org/#cn</a><br>
-Archlinux：<a href="https://www.archlinux.org/mirrors/status/">https://www.archlinux.org/mirrors/status/</a><br>
-Ubuntu：<a href="https://launchpad.net/ubuntu/+cdmirrors">https://launchpad.net/ubuntu/+cdmirrors</a><br>
-Debian：<a href="http://mirror.debian.org/status.html">http://mirror.debian.org/status.html</a><br>
-FedoraLinux/FedoraEPEL：<a href="https://admin.fedoraproject.org/mirrormanager/mirrors">https://admin.fedoraproject.org/mirrormanager/mirrors</a><br>
-Apache：<a href="http://www.apache.org/mirrors/#cn">http://www.apache.org/mirrors/#cn</a><br>
-Cygwin：<a href="https://www.cygwin.com/mirrors.html">https://www.cygwin.com/mirrors.html</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Python在Linux后台运行]]></title>
-        <id>https://zhx6.github.io/python-zai-linux-hou-tai-yun-xing/</id>
-        <link href="https://zhx6.github.io/python-zai-linux-hou-tai-yun-xing/">
-        </link>
-        <updated>2021-12-28T16:32:57.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="前言">前言</h2>
-<p>写了一个python任务脚本，需要一直运行，刚开始使用了宝塔应用管理器和python管理器，都会出现运行着就停止运行的情况，而且上面还是显示在运行着....于是打算直接使用nohup运行</p>
-<h2 id="方法">方法</h2>
+        <updated>2021-12-31T14:10:10.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="说明">说明</h2>
 <ul>
-<li>先进入脚本文件的根目录</li>
+<li>支持：<code>Ubuntu 18.04/20.04</code> <code>Debian 10 CentOS 7/8</code>；</li>
+<li>内存：<code>Ubuntu/Debian</code> 1G以上 <code>CentOS</code> 1.5G以上；</li>
+<li>支持浏览器访问，同时支持<code>Windows</code>自带的远程连接通过3389访问；</li>
+<li>编译安装<code>Guacamole</code>服务器；</li>
+<li>配置<code>Guacamole Web APP</code>；</li>
+<li>安装<code>Tomcat 9</code> <code>XRDP/TigerVNC</code> <code>XFCE4</code>桌面环境及火狐浏览器；</li>
+<li>一键安装配置<code>Let's Encrypt</code>安全证书，开启<code>OCSP</code>装订；</li>
+<li>支持安装<code>Nginx</code>反代<code>Tomcat</code>；</li>
 </ul>
-<pre><code>cd /www/Python/Auto/qianchuan/jiankong
+<h2 id="预览">预览</h2>
+<figure data-type="image" tabindex="1"><img src="https://zhx6.github.io/post-images/1640960037938.png" alt="" loading="lazy"></figure>
+<h2 id="中文支持">中文支持</h2>
+<p>如果需要中文显示，需要修改系统语言，并添加中文字体；<br>
+安装中文语言包</p>
+<pre><code>apt-get install language-pack-zh* -y
+apt-get install chinese* -y
 </code></pre>
-<ul>
-<li>使用nohup运行</li>
-</ul>
-<pre><code>nohup python -u main.py &gt; message.log 2&gt;&amp;1 &amp;
+<p>安装亚洲字体</p>
+<pre><code>apt-get install fonts-arphic-ukai fonts-arphic-uming fonts-ipafont-mincho fonts-ipafont-gothic fonts-unfonts-core -y
 </code></pre>
-<h2 id="解释">解释</h2>
-<h3 id="nohup-和-的区别">nohup 和 &amp; 的区别</h3>
-<ol>
-<li>&amp;<br>
-是指在后台运行，但当用户退出(挂起)的时候，命令自动也跟着退出</li>
-<li>nohup</li>
-</ol>
-<p>运行 nohup --help<br>
-Run COMMAND, ignoring hangup signals. 可以看到是“运行命令，忽略挂起信号”就是不挂断的运行，注意没有后台运行功能。</p>
-<p>那么，我们可以巧妙的吧他们结合起来用就是<br>
-nohup COMMAND &amp;<br>
-这样就能使命令永久的在后台执行</p>
-<h3 id="-u">-u</h3>
-<p>python的输出进行了缓冲，导致message.log并不能够马上看到输出。<br>
-为python添加-u 参数，使得python不启用缓冲。</p>
-<h3 id="messagelog">message.log</h3>
-<p>如果不填写的话，系统默认是写入到运行文件同位置output.out文件内，填写的话则会重定向到指定的文件</p>
-<h3 id="21">2&gt;&amp;1</h3>
-<ul>
-<li>0 表示stdin标准输入，用户键盘输入的内容</li>
-<li>1 表示stdout标准输出，输出到显示屏的内容</li>
-<li>2 表示stderr标准错误，报错内容</li>
-</ul>
+<p>重置系统区域</p>
+<pre><code>dpkg-reconfigure locales
+</code></pre>
+<p>选择<code>All locales</code>后回车；<br>
+<img src="https://zhx6.github.io/post-images/1640960124782.png" alt="" loading="lazy"><br>
+选择<code>zh_CN.UTF-8</code>后回车；<br>
+<img src="https://zhx6.github.io/post-images/1640960140205.png" alt="" loading="lazy"><br>
+等待更新完成后重启服务器；</p>
+<h2 id="安装桌面">安装桌面</h2>
+<p>可以直接使用<code>ROOT</code>用户安装，也可以选择其它系统用户安装；<br>
+安装过程都是中文的，根据提示进行设置即可；</p>
+<pre><code>wget https://raw.githubusercontent.com/Har-Kuun/OneClickDesktop/master/OneClickDesktop_zh-CN.sh &amp;&amp; sudo bash OneClickDesktop_zh-CN.sh
+</code></pre>
+<p>如果出现以下界面，直接回车即可；<br>
+<img src="https://zhx6.github.io/post-images/1640960182210.png" alt="" loading="lazy"><br>
+安装完成后即可使用<code>http://YOU_IP:8080/guacamole</code>进行访问<br>
+<code>Guacamole</code>的登陆账户为安装时自行设定的，然后输入系统用户及密码来完成登录；</p>
+<h2 id="其它设置">其它设置</h2>
+<p>默认端口修改，编辑文件<code>/etc/tomcat9/server.xml</code>文件修改其中的<code>8080</code>端口后保存<br>
+然后使用<code>systemctl restart tomcat9</code>命令重启<code>tomcat</code>即可；</p>
+<p>由于现代浏览器的限制无法在本地和网页桌面上进行复制粘贴<br>
+解决此问题可以使用带<code>SSL</code>的域名进行反向代理（不过博主设置反代并不成功，尴尬~~）<br>
+或者直接使用<code>Internet Explorer</code>浏览器就行，没有复制粘贴的问题<br>
+再或者使用<code>Windows</code>系统自带的远程连接也可以解决此问题；</p>
+<p>参考链接<br>
+<a href="https://github.com/Har-Kuun/OneClickDesktop">https://github.com/Har-Kuun/OneClickDesktop</a><br>
+<a href="https://qing.su/article/oneclick-desktop.html">https://qing.su/article/oneclick-desktop.html</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Go 学习笔记：go module 的基本使用]]></title>
+        <id>https://zhx6.github.io/wal4zKKf3/</id>
+        <link href="https://zhx6.github.io/wal4zKKf3/">
+        </link>
+        <updated>2021-12-31T13:50:10.000Z</updated>
+        <content type="html"><![CDATA[<p>在 go 的<code>1.11</code>版本中，引入了一个新的依赖管理库<code>go module</code>，用于替换旧的基于 GOPATH 的方法来指定在给定构建中使用哪些源文件，这个特性在<code>1.13</code>版本中被正式推荐使用</p>
+<p>在基于<code>GOPATH</code>的方式中，我们需要将项目写到<code>GOPATH</code>下的<code>src</code>文件夹中，但是使用<code>go module</code>之后便可以不用将代码放置到 src 目录下了。使用了<code>go module</code>的项目中，会在项目的目录中生成两个新的文件：<code>go.mod</code>和 <code>go.sum</code>，分别用来记录当前项目的信息（项目名，go 版本号，依赖）和每一个依赖库的哈希值</p>
+<h2 id="i-准备工作">Ⅰ. 准备工作</h2>
+<p>但是<code>go module</code>并不是默认开启的，你需要一些简短的设置，在你的终端中执行以下命令：</p>
+<pre><code class="language-go">go env -w GO111MODULE=on
+</code></pre>
+<p>GO111MODULE 的参数有三个：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>on</td>
+<td>强制启用</td>
+</tr>
+<tr>
+<td>off</td>
+<td>强制关闭</td>
+</tr>
+<tr>
+<td>auto</td>
+<td>对于存在 go.mod 的项目自动启用</td>
+</tr>
+</tbody>
+</table>
+<p>启用<code>go module</code>之后，就可以设置 Go Proxy 了，这是 GO 的代理，类比于 Linux 系统的换源</p>
+<pre><code class="language-go">go env -w GOPROXY=https://goproxy.cn,direct
+</code></pre>
+<p>这里使用的是七牛云的一个代理，速度还蛮快的，如果需要使用阿里云的，可以选择这个：</p>
+<pre><code class="language-go">go env -w GOPROXY=https://mirrors.aliyun.com/goproxy,direct
+</code></pre>
+<p>检查一下 go 的环境有无正确被配置</p>
+<pre><code class="language-go">go env
+</code></pre>
+<p>检查输出中的<code>GO111MODULE=&quot;on&quot;</code>和<code>GOPROXY=&quot;https://goproxy.cn,direct&quot;</code>是否和我的一致，如果不一致，请自行检查是否前置步骤出现问题</p>
+<h2 id="ii-开启新的项目">Ⅱ. 开启新的项目</h2>
+<p>启用<code>go module</code>之后，我们先新建一个文件夹，文件夹名字不重要，因为项目名称已经与这个文件夹无关了，我们先将目录切换到这个文件夹下</p>
+<pre><code class="language-go">cd /myPath/code/myProject
+</code></pre>
+<p>然后新建项目</p>
+<pre><code class="language-go">go mod init &lt;project name&gt;
+</code></pre>
+<p>你会发现文件夹下出现了一个<code>go.mod</code>文件，不要改动它，我们先新建一个文件：<code>app.go</code></p>
+<pre><code class="language-go">touch app.go
+</code></pre>
+<p>往里边随便写点东西</p>
+<pre><code class="language-go">vim app.go
+</code></pre>
+<pre><code class="language-go">    package main
+
+    import &quot;fmt&quot;
+
+    func main() {
+        fmt.Println(&quot;Hello world&quot;)
+    }
+</code></pre>
+<p>这只是一个最基础的文件，测试一下是否能正常运行，如果不能正常运行，请自行检查前序步骤</p>
+<p>如果我们现在安装一个新的包呢？我们这里用<code>&quot;gitee.com/go-package/carbon&quot;</code>这个包来举例，这是一个处理时间的包，具体链接：<a href="https://gitee.com/go-package/carbon">carbon: 轻量级、语义化、对开发者友好的 Golang 时间处理库 (gitee.com)</a><br>
+我们这里将上述代码改成：</p>
+<pre><code class="language-go">    package main
+
+    import (
+        &quot;fmt&quot;
+        
+        &quot;gitee.com/go-package/carbon&quot;
+    )
+
+    func main() {
+        fmt.Println(carbon.Now())
+    }
+</code></pre>
+<p>我们保存，然后运行如下代码：</p>
+<pre><code class="language-go">go mod tidy
+</code></pre>
+<p>我们打开<code>go.mod</code>文件：</p>
+<pre><code class="language-go">    module test
+
+    go 1.13
+
+    require gitee.com/go-package/carbon v1.5.4
+</code></pre>
+<p>我们发现，依赖项已经被记录下来了，接下来就是将依赖安装到本地</p>
+<pre><code class="language-go">go mod download
+</code></pre>
+<p>在经过电脑一顿处理以后，依赖像终于被安装上了，这里的依赖会被默认安装到 GOPATH 下，如果你没有设置 GOPATH 的地址，那么 GOPATH 将会使用默认地址</p>
 <blockquote>
-<p>2&gt;&amp;1是一个整体，&gt;左右不能有空格，即将错误内容重定向输入到标准输出中去。<br>
-2&gt;&amp;1中的&amp;是为了区别文件1和1(标准输出)，假如为2&gt;1，就成了将错误内容输出到文件1中，而不是标准输出中。</p>
+<p>如果安装失败，请检查代理是否有正确设置<br>
+如果不想让他被放在 GOPATH 下，我们可以使用</p>
 </blockquote>
-<h2 id="其他">其他</h2>
-<p>挂起后台进程以后想查看是否运行或者关闭该怎么办呢？别急，我们继续。</p>
-<h2 id="查看进程">查看进程</h2>
-<pre><code>ps aux | grep main.py
+<pre><code class="language-go">go mod vendor
 </code></pre>
-<p><img src="https://zhx6.github.io/post-images/1640709726260.png" alt="查看进程PID" loading="lazy"><br>
-main.py 是运行的文件<br>
-可以看到PID是12526</p>
-<h2 id="关闭进程">关闭进程</h2>
-<pre><code>kill -9 12526
+<p>将依赖移动到当前目录下，这将会自动创建<code>vendor</code>文件夹，用来存放依赖</p>
+<blockquote>
+<ol>
+<li>GO 在 1.5 版本的时候引入了 vendor 模式，如果项目目录下有 vendor 目录，会优先使用 vendor 内的包进行编译与测试</li>
+<li>不同于 pip 或者 npm，go module 对于依赖的添加思路是现在文件中写出相关依赖，然后自动安装</li>
+</ol>
+</blockquote>
+<h2 id="iii-引入本地包">Ⅲ. 引入本地包</h2>
+<p>我们不仅仅能通过网络引入包，也可以引入本地写的包，例如，我现在有一个本地的包<code>myPackage</code></p>
+<p>我们先在这个项目下新建一个文件夹：</p>
+<pre><code class="language-go">mkdir myPackage
 </code></pre>
-<h2 id="实时追踪文件输出到屏幕">实时追踪文件输出到屏幕</h2>
-<pre><code>tailf message.log
+<p>然后新建一个文件<code>add.go</code>：</p>
+<pre><code class="language-go">    package mypackage
+
+    func Add(num1, num2 int) int {
+        return num1, num2
+    }
+</code></pre>
+<p>如果我们要使用这个包，只需要在项目文件夹下的 app.go 中这样写：</p>
+<pre><code class="language-go">    package main
+
+    import (
+        &quot;fmt&quot;
+
+        &quot;test/mypackage&quot; // test 是项目名
+    )
+
+    func main() {
+        ans := mypackage.Add(12, 24)
+        fmt.Println(ans)
+    }
+</code></pre>
+<p>尝试运行一下，输出正常了</p>
+<p>我们打开<code>go.mod</code>看看，本地引入的包是不会记录到<code>go.mod</code>中的</p>
+<pre><code class="language-go">    module test
+
+    go 1.13
+
+    require gitee.com/go-package/carbon v1.5.4
+</code></pre>
+<h3 id="go-module-常用命令">GO MODULE 常用命令</h3>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>go mod init</td>
+<td>初始化 go.mod</td>
+</tr>
+<tr>
+<td>go mod tidy</td>
+<td>更新依赖文件</td>
+</tr>
+<tr>
+<td>go mod download</td>
+<td>下载依赖文件</td>
+</tr>
+<tr>
+<td>go mod vendor</td>
+<td>将依赖转移至本地的 vendor 文件</td>
+</tr>
+<tr>
+<td>go mod edit</td>
+<td>手动修改依赖文件</td>
+</tr>
+<tr>
+<td>go mod graph</td>
+<td>打印依赖图</td>
+</tr>
+<tr>
+<td>go mod verify</td>
+<td>校验依赖</td>
+</tr>
+</tbody>
+</table>
+<p>参考：<a href="https://www.cnblogs.com/niuben/p/12560104.html">go module 基本使用 - 牛奔 - 博客园 (cnblogs.com)</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Go 学习笔记：基于 net 库实现的聊天室]]></title>
+        <id>https://zhx6.github.io/a7C1TwLnV/</id>
+        <link href="https://zhx6.github.io/a7C1TwLnV/">
+        </link>
+        <updated>2021-12-31T13:48:32.000Z</updated>
+        <content type="html"><![CDATA[<p>Go 语言的 net 库真是太顶了！</p>
+<p>今天在看 go 的 net 来着，就想顺手实现一个 tcp 聊天室，大致看了一下 net 这个库，发现它实现一个简易的 tcp 聊天室比使用 C 语言之流要简单的多</p>
+<p>要想实现一个多人的聊天室，就得先弄明白单个客户端与服务端是如何交互的，这里我们先不使用协程来处理最简单的情况</p>
+<h2 id="服务端">服务端</h2>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+    &quot;net&quot;
+)
+
+func main() {
+    listener, err := net.Listen(&quot;tcp&quot;, &quot;:3000&quot;)
+    // Start listening
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    conn, err := listener.Accept()
+    // Waiting for the client to connect (blocking)
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    for {
+        buf := make([]byte, 512)
+        length, err := conn.Read(buf)
+        // conn.read(buf) 会将从conn传来的数据传到buf数组中
+        if err != nil {
+            fmt.Println(err)
+            return
+        }
+        fmt.Println(length, string(buf))
+        // 将buf中的数据打印出来
+        if string(buf[:length]) == &quot;end&quot; {
+            break
+        }
+        // 似乎这里会传过来一个换行符号，需要手动给他截掉
+    }
+    err = conn.Close()
+    // 关闭链接 释放资源
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+}
+</code></pre>
+<h2 id="客户端">客户端</h2>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+    &quot;net&quot;
+)
+
+func main() {
+    client, err := net.Dial(&quot;tcp&quot;, &quot;localhost:3000&quot;)
+    // 启动客户端并连接服务端
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    defer client.Close()
+    client.Write([]byte(&quot;Hello world&quot;))
+    // 将数据写入连接（传到服务端）
+    if err != nil {
+        fmt.Println(err)
+    }
+}
+</code></pre>
+<p>根据上述的原理，我们可以尝试写一个支持多客户端的聊天室（代码有点简陋，若有纰漏之处还请不吝赐教）</p>
+<h2 id="服务端-2">服务端</h2>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+    &quot;net&quot;
+)
+
+var clients = make(map[net.Conn]bool)
+var messages = make(chan []byte)
+
+func main() {
+    listener, err := net.Listen(&quot;tcp&quot;, &quot;:8080&quot;)
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    go boardcast()
+    for {
+        conn, err := listener.Accept()
+        if err != nil {
+            fmt.Println(err)
+            continue
+        }
+        go handleConnection(conn)
+    }
+}
+
+// 全局广播
+func boardcast() {
+    for msg := range messages {
+        for conn, _ := range clients {
+            if _, err := conn.Write(msg); err != nil {
+                fmt.Println(err)
+                continue
+            }
+        }
+        fmt.Println(msg)
+    }
+}
+
+func handleConnection(conn net.Conn) {
+    clients[conn] = true
+    fmt.Println(&quot;[System]:&quot;, conn.RemoteAddr().String(), &quot;进入聊天室&quot;)
+    for {
+        buf := make([]byte, 512)
+        length, err := conn.Read(buf)
+        if err != nil {
+            fmt.Println(err)
+            break
+        }
+        messages &lt;- buf[:length]
+    }
+
+    delete(clients, conn)
+    fmt.Println(&quot;[System]:&quot;, conn.RemoteAddr().String(), &quot;离去...&quot;)
+    conn.Close()
+}
+</code></pre>
+<h2 id="客户端-2">客户端</h2>
+<pre><code class="language-go">package main
+
+import (
+    &quot;bufio&quot;
+    &quot;fmt&quot;
+    &quot;net&quot;
+    &quot;os&quot;
+)
+
+func main() {
+    client, err := net.Dial(&quot;tcp&quot;, &quot;localhost:8080&quot;)
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    defer client.Close()
+    go func() {
+        input := bufio.NewScanner(os.Stdin)
+        for input.Scan() {
+            client.Write(input.Bytes())
+        }
+    }()
+
+    for {
+        buf := make([]byte, 512)
+        length, err := client.Read(buf)
+        if err != nil {
+            fmt.Println(err)
+        }
+        fmt.Println(string(buf[:length]))
+    }
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Go 学习笔记：Json 转换]]></title>
+        <id>https://zhx6.github.io/2I4iSMrIW/</id>
+        <link href="https://zhx6.github.io/2I4iSMrIW/">
+        </link>
+        <updated>2021-12-31T13:46:40.000Z</updated>
+        <content type="html"><![CDATA[<p>Go 语言是不能像 JavaScript 一样直接支持 Json 这种类型的，需要自己手动将 Json 转换为 Go 语言能支持的数据结构</p>
+<h2 id="json-转换为-map">Json 转换为 map</h2>
+<p>如果 json 内的字段是确定的，你可以这样写</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;encoding/json&quot;
+    &quot;fmt&quot;
+)
+
+func main() {
+    str := `{&quot;name&quot;:&quot;dio&quot;, &quot;age&quot;:&quot;12&quot;}`
+    dict := make(map[string]string)
+    err := json.Unmarshal([]byte(str), &amp;dict)
+    if err != nil {
+        fmt.Println(&quot;ERR:&quot;, err)
+    } else {
+        fmt.Println(dict)
+    }
+}
+</code></pre>
+<p>如果不能确定，那就用 interface 来替代即可</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;encoding/json&quot;
+    &quot;fmt&quot;
+)
+
+func main() {
+    str := `{&quot;name&quot;:&quot;dio&quot;, &quot;age&quot;:12}`
+    dict := make(map[string]interface{})
+    err := json.Unmarshal([]byte(str), &amp;dict)
+    if err != nil {
+        fmt.Println(&quot;ERR:&quot;, err)
+    } else {
+        // fmt.Println(dict[&quot;age&quot;])
+        fmt.Printf(&quot;%T\n&quot;, dict[&quot;age&quot;])
+    }
+}
+</code></pre>
+<h2 id="json-转换为切片">Json 转换为切片</h2>
+<pre><code class="language-go">package main
+
+import (
+    &quot;encoding/json&quot;
+    &quot;fmt&quot;
+)
+
+func main() {
+    str := `[&quot;name&quot;, &quot;value&quot;]`
+    dict := make([]string, 32)
+    err := json.Unmarshal([]byte(str), &amp;dict)
+    if err != nil {
+        fmt.Println(&quot;ERR:&quot;, err)
+    } else {
+        fmt.Println(dict[0])
+        fmt.Printf(&quot;%T\n&quot;, dict)
+    }
+}
+</code></pre>
+<h2 id="json-转结构体">Json 转结构体</h2>
+<p>Json 转结构体的时候，需要先声明结构体</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;encoding/json&quot;
+    &quot;fmt&quot;
+)
+
+type Dict struct {
+    name  string
+    age   int32
+    bobby []string
+}
+
+func main() {
+    str := `{&quot;name&quot;: &quot;dio&quot;, &quot;age&quot;:12, &quot;hobby&quot;:[&quot;Programming&quot;, &quot;dancing&quot;]}`
+    dict := Dict{}
+    err := json.Unmarshal([]byte(str), &amp;dict)
+    if err != nil {
+        fmt.Println(&quot;ERR:&quot;, err)
+    } else {
+        fmt.Printf(&quot;%+v\n&quot;, dict)
+        fmt.Printf(&quot;%T\n&quot;, dict)
+    }
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Go 学习笔记：net/http 库]]></title>
+        <id>https://zhx6.github.io/-jxjs5WOX/</id>
+        <link href="https://zhx6.github.io/-jxjs5WOX/">
+        </link>
+        <updated>2021-12-31T13:43:32.000Z</updated>
+        <content type="html"><![CDATA[<p>Go 语言提供了一个 net 的库，其中的 net/http 库提供了比较完整的 http 协议</p>
+<h2 id="get-请求">GET 请求</h2>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+    &quot;io/ioutil&quot;
+    &quot;net/http&quot;
+)
+
+func main() {
+    httpUrl := &quot;http://httpbin.org/get&quot;
+    res, err := http.Get(httpUrl)
+
+    if err != nil {
+        fmt.Println(&quot;Fail:&quot;, err)
+        return
+    }
+    defer res.Body.Close() // 延迟关闭
+
+    content, err := ioutil.ReadAll(res.Body)
+    if err != nil {
+        fmt.Println(&quot;Fail:&quot;, err)
+        return
+    }
+    fmt.Println(string(content))
+}
+</code></pre>
+<h2 id="get-请求带-param">GET 请求（带 param）</h2>
+<p>get 清求可以直接手动拼接字符串，也可以使用 net 提供的 net/url 库自动拼接</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+    &quot;io/ioutil&quot;
+    &quot;net/http&quot;
+    &quot;net/url&quot;
+)
+
+func main() {
+    httpUrl := &quot;http://httpbin.org/get&quot;
+    param := url.Values{}
+    param.Set(&quot;name&quot;, &quot;dio&quot;)
+    httpUrl2, err := url.ParseRequestURI(httpUrl)
+    if err != nil {
+        fmt.Println(&quot;Fail:&quot;, err)
+        return
+    }
+    httpUrl2.RawQuery = param.Encode()
+    res, err := http.Get(httpUrl2.String())
+    
+    if err != nil {
+        fmt.Println(&quot;Failed:&quot;, err)
+        return
+    }
+    
+    defer res.Body.Close()
+    body, err := ioutil.ReadAll(res.Body)
+    if err != nil {
+        fmt.Println(&quot;Fail:&quot;, err)
+        return
+    }
+    fmt.Println(string(body))
+}
+</code></pre>
+<h2 id="post-请求">POST 请求</h2>
+<p>当然，你也可以试着 POST 一下</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+    &quot;io/ioutil&quot;
+    &quot;net/http&quot;
+    &quot;net/url&quot;
+    &quot;strings&quot;
+)
+
+func main() {
+    httpUrl := &quot;http://httpbin.org/post&quot;
+    contentType := &quot;application/x-www-form-urlencoded&quot;
+    data := url.Values{}
+    data.Set(&quot;name&quot;, &quot;dio&quot;)
+    res, err := http.Post(httpUrl, contentType, strings.NewReader(data.Encode()))
+    if err != nil {
+        fmt.Println(&quot;Fail:&quot;, err)
+        return
+    }
+    defer res.Body.Close()
+
+    content, err := ioutil.ReadAll(res.Body)
+    if err != nil {
+        fmt.Println(&quot;Fail:&quot;, err)
+        return
+    }
+    fmt.Println(string(content))
+}
+</code></pre>
+<h2 id="模拟表单-form">模拟表单 FORM</h2>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+    &quot;io/ioutil&quot;
+    &quot;net/http&quot;
+    &quot;net/url&quot;
+)
+
+func main() {
+    httpUrl := &quot;http://httpbin.org/post&quot;
+    data := url.Values{}
+    data.Set(&quot;name&quot;, &quot;dio&quot;)
+    res, err := http.PostForm(httpUrl, data)
+    if err != nil {
+        fmt.Println(&quot;Fail&quot;, err)
+        return
+    }
+    defer res.Body.Close()
+    content, err := ioutil.ReadAll(res.Body)
+    if err != nil {
+        fmt.Println(&quot;Fail:&quot;, err)
+        return
+    }
+    fmt.Println(string(content))
+}
+</code></pre>
+<h2 id="自定义-client">自定义 client</h2>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+    &quot;io/ioutil&quot;
+    &quot;net/http&quot;
+)
+
+var (
+    client = http.Client{
+        Transport: &amp;http.Transport{
+            DisableKeepAlives: false,
+        },
+    }
+)
+
+func main() {
+    httpUrl := &quot;http://httpbin.org/get&quot;
+    res, err := client.Get(httpUrl)
+    if err != nil {
+        fmt.Println(&quot;Fail:&quot;, err)
+        return
+    }
+    defer res.Body.Close()
+    content, err := ioutil.ReadAll(res.Body)
+    if err != nil {
+        fmt.Println(&quot;Fail:&quot;, err)
+    }
+    fmt.Println(string(content))
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Go 学习笔记：并发编程]]></title>
+        <id>https://zhx6.github.io/Z4iuFcxwS/</id>
+        <link href="https://zhx6.github.io/Z4iuFcxwS/">
+        </link>
+        <updated>2021-12-31T13:41:47.000Z</updated>
+        <content type="html"><![CDATA[<p>Go 语言提供了更加方便的并发编程方式（goroutine），通过<code>go</code>关键字调用新的协程，而不需要像 java 或者类似的语言去封装一些线程池之类的东西，这使得 go 语言对并发编程显得非常友好</p>
+<p>我们可以很方便的新建一个协程</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+    &quot;time&quot;
+)
+
+func download() {
+    fmt.Println(&quot;Download begins...&quot;)
+    time.Sleep(time.Second * time.Duration(5))
+    fmt.Println(&quot;Download successful&quot;)
+}
+
+func main() {
+    fmt.Println(&quot;Main begins...&quot;)
+    go download()
+    fmt.Println(&quot;Main end&quot;)
+}
+/*
+Main begins...
+Main end
+*/
+</code></pre>
+<p>通过运行这个程序，我们发现 download 函数好像根本没有运行！这是因为，这个程序在 main 函数推出后就结束了，而通过 go 关键字生成新的协程会花费一定的时间，这就导致，在主协程结束以后，所有的子协程都被强行结束，这就是为什么 download 函数根本没有运行。为了验证这个说法，我们让主协程多跑一会儿</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+    &quot;time&quot;
+)
+
+func download() {
+    fmt.Println(&quot;Download begins...&quot;)
+    time.Sleep(time.Second * time.Duration(5))
+    fmt.Println(&quot;Download successful&quot;)
+}
+
+func main() {
+    fmt.Println(&quot;Main begins...&quot;)
+    go download()
+    time.Sleep(time.Second * time.Duration(6))
+    fmt.Println(&quot;Main end&quot;)
+}
+/*
+Main begins...
+Download begins...
+Download successful
+Main end
+*/
+</code></pre>
+<p>可以看到这里子协程是已经正常运行了的。但是，我们以后所有的程序都需要使用 sleep 函数来阻塞么？这显然是不合理的，因此，go 提供了一些其他的方法</p>
+<p>比如使用<code>sync</code>方式</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+    &quot;sync&quot;
+    &quot;time&quot;
+)
+
+var wg sync.WaitGroup
+
+func download() {
+
+    fmt.Println(&quot;Download begins...&quot;)
+    time.Sleep(time.Second * time.Duration(5))
+    fmt.Println(&quot;Download successful&quot;)
+    wg.Done()
+}
+
+func main() {
+    wg.Add(1)
+    fmt.Println(&quot;Main begins...&quot;)
+    go download()
+    wg.Wait()
+    fmt.Println(&quot;Main end&quot;)
+}
+</code></pre>
+<p>这种方式要求所有的子协程之间没有通信，主协程会一直阻塞，直到所有的子协程都结束</p>
+<p>那么，如果我们的子协程之间需要通信呢？是的，go 也提供了通道（channel）的方式来解决这个问题</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+    &quot;time&quot;
+)
+
+var ch = make(chan string, 10)
+
+func download() {
+
+    fmt.Println(&quot;Download begins...&quot;)
+    sleepTime := time.Second * time.Duration(5)
+    time.Sleep(sleepTime)
+    fmt.Println(&quot;Download successful&quot;)
+    ch &lt;- sleepTime.String()
+}
+
+func main() {
+    fmt.Println(&quot;Main begins...&quot;)
+    go download()
+    go download()
+    go download()
+    for i := 0; i &lt; 3; i++ {
+        msg := &lt;-ch
+        fmt.Println(msg)
+    }
+    fmt.Println(&quot;Main end&quot;)
+}
+</code></pre>
+<p>通道依然会阻塞主协程，等待子协程的结束，但是允许协程之间的数据交换</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Go 学习笔记：接口]]></title>
+        <id>https://zhx6.github.io/OQvYPycQm/</id>
+        <link href="https://zhx6.github.io/OQvYPycQm/">
+        </link>
+        <updated>2021-12-31T13:41:00.000Z</updated>
+        <content type="html"><![CDATA[<p>与常规的面向对象语言不同，这门语言没有提供类（class）和继承这种东西。相对的，go 提供了接口（interface）这种类型来解决这些问题</p>
+<p>接口是一组 method 的集合，做的事情就是定义一个协议，但是你不需要去实现它</p>
+<p>这里给出了利用接口编程的样例：</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+)
+
+type Animal interface {
+    Bark()
+}
+
+func (dog Dog) Bark() {
+    fmt.Println(&quot;I am&quot;, dog.name, &quot;I can bark!&quot;)
+}
+func (cat Cat) Bark() {
+    fmt.Println(&quot;I am&quot;, cat.name, &quot;I can't bark!&quot;)
+}
+
+type Dog struct {
+    name string
+}
+type Cat struct {
+    name string
+}
+
+func main() {
+    var animal Animal
+    animal = Dog{&quot;yiqi&quot;}
+    animal.Bark()
+    animal = Cat{&quot;Tom&quot;}
+    animal.Bark()
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Go 学习笔记：集合 map 与范围 range]]></title>
+        <id>https://zhx6.github.io/b-3WW6Usb/</id>
+        <link href="https://zhx6.github.io/b-3WW6Usb/">
+        </link>
+        <updated>2021-12-31T13:39:07.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="集合-range">集合 range</h2>
+<p>Go 语言同时支持了集合这种东西，它是一种无序的键值对的集合，可以通过 key 来快速检索数据，也可以像切片或者数组那样被迭代。不过集合是无序的，我们无法确定他的返回顺序，因为他是基于 hash 表实现的</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+)
+
+func main() {
+    trans := map[string]int{&quot;one&quot;: 1, &quot;two&quot;: 2, &quot;three&quot;: 3}
+    fmt.Println(trans[&quot;one&quot;])
+    fmt.Println(trans[&quot;two&quot;])
+    fmt.Println(trans[&quot;three&quot;])
+
+    trans[&quot;four&quot;] = 4
+    fmt.Println(trans[&quot;four&quot;])
+
+}
+</code></pre>
+<p>如果想要删除集合也是非常简单的，go 提供了 delete 函数</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+)
+
+func main() {
+    trans := map[string]int{&quot;one&quot;: 1, &quot;two&quot;: 2, &quot;three&quot;: 3}
+    fmt.Println(trans[&quot;one&quot;])
+    fmt.Println(trans[&quot;two&quot;])
+    fmt.Println(trans[&quot;three&quot;])
+
+    trans[&quot;four&quot;] = 4
+    fmt.Println(trans[&quot;four&quot;])
+
+    delete(trans, &quot;four&quot;)
+    fmt.Println(trans[&quot;four&quot;])
+}
+</code></pre>
+<h2 id="范围-range">范围 range</h2>
+<p>range 关键字是用来在 for 循环中迭代数组、切片、通道或集合的元素的东西，在数组和切片中，它返回元素的索引和索引对应的值，在集合中返回 key-value 对</p>
+<h2 id="遍历切片">遍历切片</h2>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+)
+
+func main() {
+    slice := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
+    var sum int = 0
+    for idx, i := range slice {
+        sum += i
+        fmt.Println(&quot;idx:&quot;, idx)
+    }
+    fmt.Println(sum)
+}
+</code></pre>
+<h2 id="遍历数组">遍历数组</h2>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+)
+
+func main() {
+    slice := [20]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
+    var sum int = 0
+    for idx, i := range slice {
+        sum += i
+        fmt.Println(&quot;idx:&quot;, idx)
+    }
+    fmt.Println(sum)
+}
+</code></pre>
+<h2 id="遍历集合">遍历集合</h2>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+)
+
+func main() {
+    trans := map[string]int{&quot;one&quot;: 1, &quot;two&quot;: 2, &quot;three&quot;: 3}
+    // fmt.Println(trans[&quot;one&quot;])
+    for key, value := range trans {
+        fmt.Println(key, value)
+    }
+    trans[&quot;four&quot;] = 4
+    for key, value := range trans {
+        fmt.Println(key, value)
+    }
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Go 学习笔记：切片 slice]]></title>
+        <id>https://zhx6.github.io/flEob5eRz/</id>
+        <link href="https://zhx6.github.io/flEob5eRz/">
+        </link>
+        <updated>2021-12-31T13:37:14.000Z</updated>
+        <content type="html"><![CDATA[<p>在 Go 中，因为数组的长度是不可变的，这就会导致在某些场景中的尴尬场面。因此，go 提供了一种 “动态数组”——slice，这种类型长度不固定，可以扩容。具体可以参考 Python 的” 列表 “，不过他俩还是区别蛮大的</p>
+<p>首先我们可以创建一个切片</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+)
+
+func main() {
+    slice1 := make([]int, 20, 30) 
+    // 类型、切片长度、预留长度(可选)
+    fmt.Println(slice1)
+    fmt.Printf(&quot;%T\n&quot;, slice1) // []int
+}
+</code></pre>
+<p>make 函数是用来为 slice map channel 分配内存的。当然，除了 make 函数以外，还有其他的方式</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+)
+
+func main() {
+    slice1 := []int{1, 2, 3}
+    fmt.Println(slice1)
+    fmt.Printf(&quot;%T\n&quot;, slice1) // []int
+}
+</code></pre>
+<p>切片也可以利用数组初始化</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+)
+
+func main() {
+    array := [5]int{1, 2, 3, 4, 5}
+    slice1 := array[:]
+    fmt.Println(slice1)
+    fmt.Println(array)
+    fmt.Printf(&quot;%T\n&quot;, slice1)
+    fmt.Printf(&quot;%T\n&quot;, array)
+}
+</code></pre>
+<p>我们也可以不引用完</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+)
+
+func main() {
+    array := [5]int{1, 2, 3, 4, 5}
+    slice1 := array[0:2] // [1 2], 取左闭右开的一个区间
+    fmt.Println(slice1)
+    fmt.Println(array)
+    fmt.Printf(&quot;%T\n&quot;, slice1)
+    fmt.Printf(&quot;%T\n&quot;, array)
+}
+</code></pre>
+<p>当然，go 提供了两个函数，用来获取 slice 的长度与切片最大长度</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+)
+
+func main() {
+    slice := make([]int, 5, 10)
+    fmt.Println(len(slice), cap(slice)) // 5, 10
+}
+</code></pre>
+<p>slice 也可以像 Python 的列表一样切片</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+)
+
+func main() {
+    slice := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
+    fmt.Println(slice[0:5])
+    fmt.Println(slice[:])
+    fmt.Println(slice[:5])
+    fmt.Println(slice[2:])
+}
+</code></pre>
+<p>如果想要拓展切片的空间，可以使用<code>append</code>和<code>copy</code>函数</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+)
+
+func main() {
+    slice := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
+    fmt.Println(len(slice), cap(slice))
+    slice = append(slice, 11) // 在最后面追加元素
+    fmt.Println(len(slice), cap(slice)) 
+    // 追加后，预留的空间翻倍了
+    fmt.Println(slice)
+}
+</code></pre>
+<p>copy 函数可以帮助你将一个小的切片复制到另一个大的切片中去</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+)
+
+func main() {
+    slice := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
+    slice1 := make([]int, 11, 22)
+    copy(slice1, slice)
+    fmt.Println(slice, cap(slice))
+    fmt.Println(slice1, cap(slice1))
+
+    fmt.Println(slice)
+    fmt.Println(slice1)
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Go 学习笔记：结构体]]></title>
+        <id>https://zhx6.github.io/dck1-G09H/</id>
+        <link href="https://zhx6.github.io/dck1-G09H/">
+        </link>
+        <updated>2021-12-31T13:35:46.000Z</updated>
+        <content type="html"><![CDATA[<p>go 也提供了结构体这个功能，具体实现也很类似与 C 语言</p>
+<p>声明结构体</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+)
+
+type character struct {
+    name string
+    star int
+}
+
+func main() {
+    var ch1 character = character{name: &quot;shenli&quot;, star: 5}
+    ch2 := character{&quot;leidian&quot;, 5}
+    fmt.Println(ch1)
+    fmt.Println(ch2)
+}
+</code></pre>
+<p>亦或者是访问里面的成员变量</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+)
+
+type character struct {
+    name string
+    star int
+}
+
+func main() {
+    var ch1 character = character{name: &quot;shenli&quot;, star: 5}
+    ch2 := character{&quot;leidian&quot;, 5}
+    fmt.Println(ch1.name)
+    fmt.Println(ch1.star)
+    fmt.Println(ch1.name)
+    fmt.Println(ch2.star)
+}
+</code></pre>
+<p>当然，也可以作为参数传入函数内</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+)
+
+type character struct {
+    name string
+    star int
+}
+
+func main() {
+    var ch1 character = character{name: &quot;shenli&quot;, star: 5}
+    ch2 := character{&quot;leidian&quot;, 5}
+    getInfo(ch1)
+    getInfo(ch2)
+}
+
+func getInfo(ch character) {
+    fmt.Println(ch.name)
+    fmt.Println(ch.star)
+}
+</code></pre>
+<p>学了结构体，简单写一个单向链表</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+)
+
+type node struct {
+    value int
+    next  *node
+}
+
+type linkList struct {
+    length int
+    next   *node
+    tail   *node
+}
+
+func main() {
+    list := createLinkList()
+    createNode(list, 2)
+    createNode(list, 3)
+    createNode(list, 7)
+
+    forEach(*list)
+}
+
+func createLinkList() *linkList {
+    return &amp;linkList{length: 0}
+}
+
+func createNode(curLinkList *linkList, value int) int {
+    tail := curLinkList.tail
+    newNode := &amp;node{value: value}
+    length := curLinkList.length + 1
+    if tail == nil {
+        curLinkList.tail = newNode
+        curLinkList.next = newNode
+    } else {
+        curNode := curLinkList.tail
+        curLinkList.tail = newNode
+        curNode.next = newNode
+    }
+    curLinkList.length = length
+    return length
+
+}
+
+func forEach(curLinkList linkList) int {
+    curNode := curLinkList.next
+    fmt.Println(curNode.value)
+    for curNode.next != nil {
+        curNode = curNode.next
+        fmt.Println(curNode.value)
+    }
+    return curLinkList.length
+}
 </code></pre>
 ]]></content>
     </entry>

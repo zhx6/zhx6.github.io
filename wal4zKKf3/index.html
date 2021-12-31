@@ -1,0 +1,422 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Go 学习笔记：go module 的基本使用 | 皮皮虎&#39;s Blog</title>
+
+<link rel="shortcut icon" href="https://zhx6.github.io/favicon.ico?v=1640960351758">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zhx6.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="/">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            皮皮虎&#39;s Blog
+        </div>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    🏠 首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    📦 归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/friends" class="menu gt-a-link">
+                    🔗 友链
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="https://zhx6.github.io/message" class="menu gt-a-link">
+                    ✉️ 留言
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/about" class="menu gt-a-link">
+                    👦 关于
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="https://travellings.link" class="menu gt-a-link">
+                    🚇 开往
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1640960351758"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    Go 学习笔记：go module 的基本使用
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-12-31 ·
+                    </time>
+                    
+                        <a href="https://zhx6.github.io/8Fmuty6i2/" class="post-tags">
+                            # Golang
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>在 go 的<code>1.11</code>版本中，引入了一个新的依赖管理库<code>go module</code>，用于替换旧的基于 GOPATH 的方法来指定在给定构建中使用哪些源文件，这个特性在<code>1.13</code>版本中被正式推荐使用</p>
+<p>在基于<code>GOPATH</code>的方式中，我们需要将项目写到<code>GOPATH</code>下的<code>src</code>文件夹中，但是使用<code>go module</code>之后便可以不用将代码放置到 src 目录下了。使用了<code>go module</code>的项目中，会在项目的目录中生成两个新的文件：<code>go.mod</code>和 <code>go.sum</code>，分别用来记录当前项目的信息（项目名，go 版本号，依赖）和每一个依赖库的哈希值</p>
+<h2 id="i-准备工作">Ⅰ. 准备工作</h2>
+<p>但是<code>go module</code>并不是默认开启的，你需要一些简短的设置，在你的终端中执行以下命令：</p>
+<pre><code class="language-go">go env -w GO111MODULE=on
+</code></pre>
+<p>GO111MODULE 的参数有三个：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>on</td>
+<td>强制启用</td>
+</tr>
+<tr>
+<td>off</td>
+<td>强制关闭</td>
+</tr>
+<tr>
+<td>auto</td>
+<td>对于存在 go.mod 的项目自动启用</td>
+</tr>
+</tbody>
+</table>
+<p>启用<code>go module</code>之后，就可以设置 Go Proxy 了，这是 GO 的代理，类比于 Linux 系统的换源</p>
+<pre><code class="language-go">go env -w GOPROXY=https://goproxy.cn,direct
+</code></pre>
+<p>这里使用的是七牛云的一个代理，速度还蛮快的，如果需要使用阿里云的，可以选择这个：</p>
+<pre><code class="language-go">go env -w GOPROXY=https://mirrors.aliyun.com/goproxy,direct
+</code></pre>
+<p>检查一下 go 的环境有无正确被配置</p>
+<pre><code class="language-go">go env
+</code></pre>
+<p>检查输出中的<code>GO111MODULE=&quot;on&quot;</code>和<code>GOPROXY=&quot;https://goproxy.cn,direct&quot;</code>是否和我的一致，如果不一致，请自行检查是否前置步骤出现问题</p>
+<h2 id="ii-开启新的项目">Ⅱ. 开启新的项目</h2>
+<p>启用<code>go module</code>之后，我们先新建一个文件夹，文件夹名字不重要，因为项目名称已经与这个文件夹无关了，我们先将目录切换到这个文件夹下</p>
+<pre><code class="language-go">cd /myPath/code/myProject
+</code></pre>
+<p>然后新建项目</p>
+<pre><code class="language-go">go mod init &lt;project name&gt;
+</code></pre>
+<p>你会发现文件夹下出现了一个<code>go.mod</code>文件，不要改动它，我们先新建一个文件：<code>app.go</code></p>
+<pre><code class="language-go">touch app.go
+</code></pre>
+<p>往里边随便写点东西</p>
+<pre><code class="language-go">vim app.go
+</code></pre>
+<pre><code class="language-go">    package main
+
+    import &quot;fmt&quot;
+
+    func main() {
+        fmt.Println(&quot;Hello world&quot;)
+    }
+</code></pre>
+<p>这只是一个最基础的文件，测试一下是否能正常运行，如果不能正常运行，请自行检查前序步骤</p>
+<p>如果我们现在安装一个新的包呢？我们这里用<code>&quot;gitee.com/go-package/carbon&quot;</code>这个包来举例，这是一个处理时间的包，具体链接：<a href="https://gitee.com/go-package/carbon">carbon: 轻量级、语义化、对开发者友好的 Golang 时间处理库 (gitee.com)</a><br>
+我们这里将上述代码改成：</p>
+<pre><code class="language-go">    package main
+
+    import (
+        &quot;fmt&quot;
+        
+        &quot;gitee.com/go-package/carbon&quot;
+    )
+
+    func main() {
+        fmt.Println(carbon.Now())
+    }
+</code></pre>
+<p>我们保存，然后运行如下代码：</p>
+<pre><code class="language-go">go mod tidy
+</code></pre>
+<p>我们打开<code>go.mod</code>文件：</p>
+<pre><code class="language-go">    module test
+
+    go 1.13
+
+    require gitee.com/go-package/carbon v1.5.4
+</code></pre>
+<p>我们发现，依赖项已经被记录下来了，接下来就是将依赖安装到本地</p>
+<pre><code class="language-go">go mod download
+</code></pre>
+<p>在经过电脑一顿处理以后，依赖像终于被安装上了，这里的依赖会被默认安装到 GOPATH 下，如果你没有设置 GOPATH 的地址，那么 GOPATH 将会使用默认地址</p>
+<blockquote>
+<p>如果安装失败，请检查代理是否有正确设置<br>
+如果不想让他被放在 GOPATH 下，我们可以使用</p>
+</blockquote>
+<pre><code class="language-go">go mod vendor
+</code></pre>
+<p>将依赖移动到当前目录下，这将会自动创建<code>vendor</code>文件夹，用来存放依赖</p>
+<blockquote>
+<ol>
+<li>GO 在 1.5 版本的时候引入了 vendor 模式，如果项目目录下有 vendor 目录，会优先使用 vendor 内的包进行编译与测试</li>
+<li>不同于 pip 或者 npm，go module 对于依赖的添加思路是现在文件中写出相关依赖，然后自动安装</li>
+</ol>
+</blockquote>
+<h2 id="iii-引入本地包">Ⅲ. 引入本地包</h2>
+<p>我们不仅仅能通过网络引入包，也可以引入本地写的包，例如，我现在有一个本地的包<code>myPackage</code></p>
+<p>我们先在这个项目下新建一个文件夹：</p>
+<pre><code class="language-go">mkdir myPackage
+</code></pre>
+<p>然后新建一个文件<code>add.go</code>：</p>
+<pre><code class="language-go">    package mypackage
+
+    func Add(num1, num2 int) int {
+        return num1, num2
+    }
+</code></pre>
+<p>如果我们要使用这个包，只需要在项目文件夹下的 app.go 中这样写：</p>
+<pre><code class="language-go">    package main
+
+    import (
+        &quot;fmt&quot;
+
+        &quot;test/mypackage&quot; // test 是项目名
+    )
+
+    func main() {
+        ans := mypackage.Add(12, 24)
+        fmt.Println(ans)
+    }
+</code></pre>
+<p>尝试运行一下，输出正常了</p>
+<p>我们打开<code>go.mod</code>看看，本地引入的包是不会记录到<code>go.mod</code>中的</p>
+<pre><code class="language-go">    module test
+
+    go 1.13
+
+    require gitee.com/go-package/carbon v1.5.4
+</code></pre>
+<h3 id="go-module-常用命令">GO MODULE 常用命令</h3>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>go mod init</td>
+<td>初始化 go.mod</td>
+</tr>
+<tr>
+<td>go mod tidy</td>
+<td>更新依赖文件</td>
+</tr>
+<tr>
+<td>go mod download</td>
+<td>下载依赖文件</td>
+</tr>
+<tr>
+<td>go mod vendor</td>
+<td>将依赖转移至本地的 vendor 文件</td>
+</tr>
+<tr>
+<td>go mod edit</td>
+<td>手动修改依赖文件</td>
+</tr>
+<tr>
+<td>go mod graph</td>
+<td>打印依赖图</td>
+</tr>
+<tr>
+<td>go mod verify</td>
+<td>校验依赖</td>
+</tr>
+</tbody>
+</table>
+<p>参考：<a href="https://www.cnblogs.com/niuben/p/12560104.html">go module 基本使用 - 牛奔 - 博客园 (cnblogs.com)</a></p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://zhx6.github.io/a7C1TwLnV/" class="post-title gt-a-link">
+                    Go 学习笔记：基于 net 库实现的聊天室
+                </a>
+            </div>
+        
+
+        
+
+        
+            
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+<script>
+    // md5.min.js
+    !function(n){
+        "use strict";
+        function d(n,t){var r=(65535&n)+(65535&t);return(n>>16)+(t>>16)+(r>>16)<<16|65535&r}
+        function f(n,t,r,e,o,u){return d((c=d(d(t,n),d(e,u)))<<(f=o)|c>>>32-f,r);var c,f}
+        function l(n,t,r,e,o,u,c){return f(t&r|~t&e,n,t,o,u,c)}
+        function v(n,t,r,e,o,u,c){return f(t&e|r&~e,n,t,o,u,c)}
+        function g(n,t,r,e,o,u,c){return f(t^r^e,n,t,o,u,c)}
+        function m(n,t,r,e,o,u,c){return f(r^(t|~e),n,t,o,u,c)}
+        function i(n,t){var r,e,o,u,c;n[t>>5]|=128<<t%32,n[14+(t+64>>>9<<4)]=t;var f=1732584193,i=-271733879,a=-1732584194,h=271733878;for(r=0;r<n.length;r+=16)f=l(e=f,o=i,u=a,c=h,n[r],7,-680876936),h=l(h,f,i,a,n[r+1],12,-389564586),a=l(a,h,f,i,n[r+2],17,606105819),i=l(i,a,h,f,n[r+3],22,-1044525330),f=l(f,i,a,h,n[r+4],7,-176418897),h=l(h,f,i,a,n[r+5],12,1200080426),a=l(a,h,f,i,n[r+6],17,-1473231341),i=l(i,a,h,f,n[r+7],22,-45705983),f=l(f,i,a,h,n[r+8],7,1770035416),h=l(h,f,i,a,n[r+9],12,-1958414417),a=l(a,h,f,i,n[r+10],17,-42063),i=l(i,a,h,f,n[r+11],22,-1990404162),f=l(f,i,a,h,n[r+12],7,1804603682),h=l(h,f,i,a,n[r+13],12,-40341101),a=l(a,h,f,i,n[r+14],17,-1502002290),f=v(f,i=l(i,a,h,f,n[r+15],22,1236535329),a,h,n[r+1],5,-165796510),h=v(h,f,i,a,n[r+6],9,-1069501632),a=v(a,h,f,i,n[r+11],14,643717713),i=v(i,a,h,f,n[r],20,-373897302),f=v(f,i,a,h,n[r+5],5,-701558691),h=v(h,f,i,a,n[r+10],9,38016083),a=v(a,h,f,i,n[r+15],14,-660478335),i=v(i,a,h,f,n[r+4],20,-405537848),f=v(f,i,a,h,n[r+9],5,568446438),h=v(h,f,i,a,n[r+14],9,-1019803690),a=v(a,h,f,i,n[r+3],14,-187363961),i=v(i,a,h,f,n[r+8],20,1163531501),f=v(f,i,a,h,n[r+13],5,-1444681467),h=v(h,f,i,a,n[r+2],9,-51403784),a=v(a,h,f,i,n[r+7],14,1735328473),f=g(f,i=v(i,a,h,f,n[r+12],20,-1926607734),a,h,n[r+5],4,-378558),h=g(h,f,i,a,n[r+8],11,-2022574463),a=g(a,h,f,i,n[r+11],16,1839030562),i=g(i,a,h,f,n[r+14],23,-35309556),f=g(f,i,a,h,n[r+1],4,-1530992060),h=g(h,f,i,a,n[r+4],11,1272893353),a=g(a,h,f,i,n[r+7],16,-155497632),i=g(i,a,h,f,n[r+10],23,-1094730640),f=g(f,i,a,h,n[r+13],4,681279174),h=g(h,f,i,a,n[r],11,-358537222),a=g(a,h,f,i,n[r+3],16,-722521979),i=g(i,a,h,f,n[r+6],23,76029189),f=g(f,i,a,h,n[r+9],4,-640364487),h=g(h,f,i,a,n[r+12],11,-421815835),a=g(a,h,f,i,n[r+15],16,530742520),f=m(f,i=g(i,a,h,f,n[r+2],23,-995338651),a,h,n[r],6,-198630844),h=m(h,f,i,a,n[r+7],10,1126891415),a=m(a,h,f,i,n[r+14],15,-1416354905),i=m(i,a,h,f,n[r+5],21,-57434055),f=m(f,i,a,h,n[r+12],6,1700485571),h=m(h,f,i,a,n[r+3],10,-1894986606),a=m(a,h,f,i,n[r+10],15,-1051523),i=m(i,a,h,f,n[r+1],21,-2054922799),f=m(f,i,a,h,n[r+8],6,1873313359),h=m(h,f,i,a,n[r+15],10,-30611744),a=m(a,h,f,i,n[r+6],15,-1560198380),i=m(i,a,h,f,n[r+13],21,1309151649),f=m(f,i,a,h,n[r+4],6,-145523070),h=m(h,f,i,a,n[r+11],10,-1120210379),a=m(a,h,f,i,n[r+2],15,718787259),i=m(i,a,h,f,n[r+9],21,-343485551),f=d(f,e),i=d(i,o),a=d(a,u),h=d(h,c);return[f,i,a,h]}
+        function a(n){var t,r="",e=32*n.length;for(t=0;t<e;t+=8)r+=String.fromCharCode(n[t>>5]>>>t%32&255);return r}
+        function h(n){var t,r=[];for(r[(n.length>>2)-1]=void 0,t=0;t<r.length;t+=1)r[t]=0;var e=8*n.length;for(t=0;t<e;t+=8)r[t>>5]|=(255&n.charCodeAt(t/8))<<t%32;return r}
+        function e(n){var t,r,e="0123456789abcdef",o="";for(r=0;r<n.length;r+=1)t=n.charCodeAt(r),o+=e.charAt(t>>>4&15)+e.charAt(15&t);return o}
+        function r(n){return unescape(encodeURIComponent(n))}
+        function o(n){return a(i(h(t=r(n)),8*t.length));var t}
+        function u(n,t){return function(n,t){var r,e,o=h(n),u=[],c=[];for(u[15]=c[15]=void 0,16<o.length&&(o=i(o,8*n.length)),r=0;r<16;r+=1)u[r]=909522486^o[r],c[r]=1549556828^o[r];return e=i(u.concat(h(t)),512+8*t.length),a(i(c.concat(e),640))}(r(n),r(t))}
+        function t(n,t,r){return t?r?u(t,n):e(u(t,n)):r?o(n):e(o(n))}
+        "function"==typeof define&&define.amd?define(function(){return t}):"object"==typeof module&&module.exports?module.exports=t:n.md5=t;
+    }(this);
+</script>
+
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: 'de982ade31248e455cc7',
+    clientSecret: 'a971030cb053c7e9e26790f50efee06abbbdc00c',
+    repo: 'zhx6.github.io',
+    owner: 'zhx6',
+    admin: ['zhx6'],
+    id: md5(location.pathname),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false       // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+            
+
+            
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">出言有尺，嬉闹有度，做事有余，说话有德。</div>
+    <div class="social-container">
+        
+            
+                <a href="https://github.com/zhx6" target="_blank">
+                    <i class="fab fa-github gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+        
+            
+                <a href="https://weibo.com/u/7731031195" target="_blank">
+                    <i class="fab fa-weibo gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+                <a href="https://www.zhihu.com/people/ibaige" target="_blank">
+                    <i class="fab fa-zhihu gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        <a href="https://beian.miit.gov.cn/" target="_blank">琼ICP备2021000815号-3</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://zhx6.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>
