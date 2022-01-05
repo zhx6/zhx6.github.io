@@ -2,14 +2,45 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://zhx6.github.io</id>
     <title>皮皮虎&apos;s Blog</title>
-    <updated>2021-12-31T14:30:45.742Z</updated>
+    <updated>2022-01-05T04:37:23.434Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://zhx6.github.io"/>
     <link rel="self" href="https://zhx6.github.io/atom.xml"/>
     <subtitle>出言有尺，嬉闹有度，做事有余，说话有德。</subtitle>
     <logo>https://zhx6.github.io/images/avatar.png</logo>
     <icon>https://zhx6.github.io/favicon.ico</icon>
-    <rights>All rights reserved 2021, 皮皮虎&apos;s Blog</rights>
+    <rights>All rights reserved 2022, 皮皮虎&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[icp备案查询接口/自动获取ICP备案号接口的使用]]></title>
+        <id>https://zhx6.github.io/QW-kWbI6i/</id>
+        <link href="https://zhx6.github.io/QW-kWbI6i/">
+        </link>
+        <updated>2022-01-04T04:39:31.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="icp备案查询接口">icp备案查询接口</h2>
+<pre><code class="language-php">https://api.pph.ink/api/icp
+</code></pre>
+<h3 id="使用方法">使用方法</h3>
+<p>请求示例：https://api.pph.ink/api/icp?domain=<br>
+请求方式：get<br>
+请求参数：domain=需查询的域名，可以包含http或二级<br>
+返回示例：</p>
+<pre><code class="language-php">{
+&quot;icp&quot;: &quot;粤B2-20090059-5&quot;,
+&quot;unitName&quot;: &quot;深圳市腾讯计算机系统有限公司&quot;,
+&quot;natureName&quot;: &quot;企业&quot;,
+&quot;msg&quot;: &quot;查询成功&quot;,
+&quot;result&quot;: &quot;1&quot;
+}
+</code></pre>
+<h2 id="icp备案号自动获取接口">icp备案号自动获取接口</h2>
+<pre><code class="language-php">https://api.pph.ink/api/icpbah
+</code></pre>
+<h3 id="使用方法-2">使用方法</h3>
+<p>直接添加在网站备案号处：</p>
+<pre><code class="language-php">&lt;a href=&quot;http://beian.miit.gov.cn&quot; target=&quot;_blank&quot;&gt;&lt;script src=&quot;https://api.pph.ink/api/icpbah&quot;&gt;&lt;/script&gt;&lt;/a&gt;
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Linux一键安装可视化桌面环境支持浏览器及RDP访问]]></title>
         <id>https://zhx6.github.io/f5hKN-uUY/</id>
@@ -1079,137 +1110,6 @@ func main() {
 
     fmt.Println(slice)
     fmt.Println(slice1)
-}
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Go 学习笔记：结构体]]></title>
-        <id>https://zhx6.github.io/dck1-G09H/</id>
-        <link href="https://zhx6.github.io/dck1-G09H/">
-        </link>
-        <updated>2021-12-31T13:35:46.000Z</updated>
-        <content type="html"><![CDATA[<p>go 也提供了结构体这个功能，具体实现也很类似与 C 语言</p>
-<p>声明结构体</p>
-<pre><code class="language-go">package main
-
-import (
-    &quot;fmt&quot;
-)
-
-type character struct {
-    name string
-    star int
-}
-
-func main() {
-    var ch1 character = character{name: &quot;shenli&quot;, star: 5}
-    ch2 := character{&quot;leidian&quot;, 5}
-    fmt.Println(ch1)
-    fmt.Println(ch2)
-}
-</code></pre>
-<p>亦或者是访问里面的成员变量</p>
-<pre><code class="language-go">package main
-
-import (
-    &quot;fmt&quot;
-)
-
-type character struct {
-    name string
-    star int
-}
-
-func main() {
-    var ch1 character = character{name: &quot;shenli&quot;, star: 5}
-    ch2 := character{&quot;leidian&quot;, 5}
-    fmt.Println(ch1.name)
-    fmt.Println(ch1.star)
-    fmt.Println(ch1.name)
-    fmt.Println(ch2.star)
-}
-</code></pre>
-<p>当然，也可以作为参数传入函数内</p>
-<pre><code class="language-go">package main
-
-import (
-    &quot;fmt&quot;
-)
-
-type character struct {
-    name string
-    star int
-}
-
-func main() {
-    var ch1 character = character{name: &quot;shenli&quot;, star: 5}
-    ch2 := character{&quot;leidian&quot;, 5}
-    getInfo(ch1)
-    getInfo(ch2)
-}
-
-func getInfo(ch character) {
-    fmt.Println(ch.name)
-    fmt.Println(ch.star)
-}
-</code></pre>
-<p>学了结构体，简单写一个单向链表</p>
-<pre><code class="language-go">package main
-
-import (
-    &quot;fmt&quot;
-)
-
-type node struct {
-    value int
-    next  *node
-}
-
-type linkList struct {
-    length int
-    next   *node
-    tail   *node
-}
-
-func main() {
-    list := createLinkList()
-    createNode(list, 2)
-    createNode(list, 3)
-    createNode(list, 7)
-
-    forEach(*list)
-}
-
-func createLinkList() *linkList {
-    return &amp;linkList{length: 0}
-}
-
-func createNode(curLinkList *linkList, value int) int {
-    tail := curLinkList.tail
-    newNode := &amp;node{value: value}
-    length := curLinkList.length + 1
-    if tail == nil {
-        curLinkList.tail = newNode
-        curLinkList.next = newNode
-    } else {
-        curNode := curLinkList.tail
-        curLinkList.tail = newNode
-        curNode.next = newNode
-    }
-    curLinkList.length = length
-    return length
-
-}
-
-func forEach(curLinkList linkList) int {
-    curNode := curLinkList.next
-    fmt.Println(curNode.value)
-    for curNode.next != nil {
-        curNode = curNode.next
-        fmt.Println(curNode.value)
-    }
-    return curLinkList.length
 }
 </code></pre>
 ]]></content>

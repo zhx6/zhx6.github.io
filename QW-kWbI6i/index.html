@@ -4,7 +4,7 @@
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<title>Go 学习笔记：运算符 | 皮皮虎&#39;s Blog</title>
+<title>icp备案查询接口/自动获取ICP备案号接口的使用 | 皮皮虎&#39;s Blog</title>
 
 <link rel="shortcut icon" href="https://zhx6.github.io/favicon.ico?v=1641357424424">
 
@@ -117,221 +117,42 @@
         <div class="post-detail gt-bg-theme-color-second">
             <article class="gt-post-content">
                 <h2 class="post-title">
-                    Go 学习笔记：运算符
+                    icp备案查询接口/自动获取ICP备案号接口的使用
                 </h2>
                 <div class="post-info">
                     <time class="post-time gt-c-content-color-first">
-                        · 2021-12-31 ·
+                        · 2022-01-04 ·
                     </time>
                     
-                        <a href="https://zhx6.github.io/8Fmuty6i2/" class="post-tags">
-                            # Golang
+                        <a href="https://zhx6.github.io/PJTbiJ_Fp/" class="post-tags">
+                            # api
                         </a>
                     
                 </div>
                 <div class="post-content">
-                    <h2 id="go-学习笔记运算符">Go 学习笔记：运算符</h2>
-<p>Go 支持的运算符和 C 语言是完全相同的</p>
-<p>比如基础的四则运算</p>
-<pre><code class="language-go">package main
-
-import (
-    &quot;fmt&quot;
-)
-
-func main() {
-    var a, b int = 5, 7
-    fmt.Println(a + b)
-    fmt.Println(a - b)
-    fmt.Println(a * b)
-    fmt.Println(a / b)
-    fmt.Println(a % b)
+                    <h2 id="icp备案查询接口">icp备案查询接口</h2>
+<pre><code class="language-php">https://api.pph.ink/api/icp
+</code></pre>
+<h3 id="使用方法">使用方法</h3>
+<p>请求示例：https://api.pph.ink/api/icp?domain=<br>
+请求方式：get<br>
+请求参数：domain=需查询的域名，可以包含http或二级<br>
+返回示例：</p>
+<pre><code class="language-php">{
+&quot;icp&quot;: &quot;粤B2-20090059-5&quot;,
+&quot;unitName&quot;: &quot;深圳市腾讯计算机系统有限公司&quot;,
+&quot;natureName&quot;: &quot;企业&quot;,
+&quot;msg&quot;: &quot;查询成功&quot;,
+&quot;result&quot;: &quot;1&quot;
 }
 </code></pre>
-<p>当然还有自增自减</p>
-<pre><code class="language-go">package main
-
-import (
-    &quot;fmt&quot;
-)
-
-func main() {
-    var a, b int = 5, 7
-    a++
-    fmt.Println(a)
-    b--
-    fmt.Println(b)
-}
+<h2 id="icp备案号自动获取接口">icp备案号自动获取接口</h2>
+<pre><code class="language-php">https://api.pph.ink/api/icpbah
 </code></pre>
-<p>但是与 C 语言不同的是，自增自减只有<code>a++</code>的形式，<code>++a</code>的形式是不被允许的，同时，你必须要将其作为独立的语句使用</p>
-<pre><code class="language-go">package main
-
-import (
-    &quot;fmt&quot;
-)
-
-func main() {
-    var a, b int = 5, 7
-    fmt.Println(a++) // 需要作为独立的语句使用
-    fmt.Println(--b) // 这种形式也是不被允许的
-}
+<h3 id="使用方法-2">使用方法</h3>
+<p>直接添加在网站备案号处：</p>
+<pre><code class="language-php">&lt;a href=&quot;http://beian.miit.gov.cn&quot; target=&quot;_blank&quot;&gt;&lt;script src=&quot;https://api.pph.ink/api/icpbah&quot;&gt;&lt;/script&gt;&lt;/a&gt;
 </code></pre>
-<p>当然，C 语言常用的关系运算符也是支持的</p>
-<pre><code class="language-go">package main
-
-import (
-    &quot;fmt&quot;
-)
-
-func main() {
-    var a, b int = 5, 7
-    fmt.Println(a == b)
-    fmt.Println(a &gt;= b)
-    fmt.Println(a &lt;= b)
-    fmt.Println(a != b)
-    fmt.Println(a &gt; b)
-    fmt.Println(a &lt; b)
-}
-</code></pre>
-<p>还有逻辑运算符</p>
-<pre><code class="language-go">package main
-
-import (
-    &quot;fmt&quot;
-)
-
-func main() {
-    var a, b bool = true, false
-    fmt.Println(a &amp;&amp; b)
-    fmt.Println(a || b)
-    fmt.Println(a &amp;&amp; !b)
-}
-</code></pre>
-<p>值得注意的是，逻辑运算符两边都只能值<code>bool</code>类型的值，使用非布尔类型的值是会报错的</p>
-<pre><code class="language-go">package main
-
-import (
-    &quot;fmt&quot;
-)
-
-func main() {
-    var a, b int = 1, 2
-    fmt.Println(a &amp;&amp; b)
-    fmt.Println(a || b)
-    fmt.Println(a &amp;&amp; !b)
-}
-
-/*
-# command-line-arguments
-.\main.go:16:16: invalid operation: a &amp;&amp; b (operator &amp;&amp; not defined on int)
-.\main.go:17:16: invalid operation: a || b (operator || not defined on int)
-.\main.go:18:19: invalid operation: !b (operator ! not defined on int)
-*/
-</code></pre>
-<p>同时，位运算也是可以的</p>
-<pre><code class="language-go">package main
-
-import (
-    &quot;fmt&quot;
-)
-
-func main() {
-    var a, b int = 1, 2
-    fmt.Println(a &lt;&lt; 1) // 二进制左移一位
-    fmt.Println(b &gt;&gt; 1) // 二进制右移一位
-    fmt.Println(a | 1)  // 求或
-    fmt.Println(a &amp; 1)  // 求与
-    fmt.Println(a ^ 1)  // 求异或
-}
-</code></pre>
-<p>当然还有一些赋值符号</p>
-<pre><code class="language-go">package main
-
-import (
-    &quot;fmt&quot;
-)
-
-func main() {
-    var a, b, tmp int = 2, 4, 0
-    tmp = a
-    a = b
-    b = tmp
-    fmt.Println(a, b, tmp)
-
-    a -= tmp
-    fmt.Println(a)
-
-    a += tmp
-    fmt.Println(a)
-
-    a *= tmp
-    fmt.Println(a)
-
-    a /= tmp
-    fmt.Println(a)
-
-    a &lt;&lt;= tmp
-    fmt.Println(a)
-
-    a &gt;&gt;= tmp
-    fmt.Println(a)
-
-    a ^= tmp
-    fmt.Println(a)
-
-    a |= tmp
-    fmt.Println(a)
-
-    a &amp;= tmp
-    fmt.Println(a)
-}
-</code></pre>
-<p>还有俩和指针相关的</p>
-<pre><code class="language-go">package main
-
-import (
-    &quot;fmt&quot;
-)
-
-func main() {
-    var a *int // * 表示这是一个指针变量
-    var b int = 12 
-
-    a = &amp;b // &amp; 取地址符
-    fmt.Println(*a, a, b)
-}
-</code></pre>
-<p>运算优先级也可以直接参考 C 语言</p>
-<table>
-<thead>
-<tr>
-<th>优先级</th>
-<th>运算符</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>5</td>
-<td><code>* / % &lt;&lt; &gt;&gt; &amp; &amp; ^</code></td>
-</tr>
-<tr>
-<td>4</td>
-<td><code>+ - | ^</code></td>
-</tr>
-<tr>
-<td>3</td>
-<td><code>== != &lt; &lt;= &gt; &gt;=</code></td>
-</tr>
-<tr>
-<td>2</td>
-<td><code>&amp;&amp;</code></td>
-</tr>
-<tr>
-<td>1</td>
-<td><code>||</code></td>
-</tr>
-</tbody>
-</table>
 
                 </div>
             </article>
@@ -340,8 +161,8 @@ func main() {
         
             <div class="next-post">
                 <div class="next gt-c-content-color-first">下一篇</div>
-                <a href="https://zhx6.github.io/uCYjwvEs-/" class="post-title gt-a-link">
-                    Go 学习笔记：循环
+                <a href="https://zhx6.github.io/f5hKN-uUY/" class="post-title gt-a-link">
+                    Linux一键安装可视化桌面环境支持浏览器及RDP访问
                 </a>
             </div>
         
